@@ -8,4 +8,5 @@ Pana in acest moment avem facuta o prima varianta a modului in care vrem sa arat
 
 Am ales, de asemenea, culori relevante pentru personajele din Scooby-Doo: `#e2ab37`, `#77429e`, `#35406f`, `#232947`, `#a1ae5f`, `#96744f`.
 
-Ca idee, ideea pe care vom merge va fi urmatoarea(Screenshot-ul este din canva):![image](https://github.com/user-attachments/assets/44837b24-1485-4087-8c51-7eea1b5d156a)
+Ideea pe care vom merge va fi urmatoarea(Screenshot-ul este din canva): ![image](https://github.com/user-attachments/assets/1a06ba0a-1aa8-4a4c-ac04-2505642d6092)
+
