@@ -86,7 +86,9 @@ public class NetworkRoomPlayerLobby : NetworkBehaviour
         }
 
         string ip = NetworkManager.singleton.networkAddress;
-        RoomCode.text = "Room Code: " + ip.ToString();
+        ushort port = Room.GetComponent<TelepathyTransport>().port;
+        RoomCode.text = $"Room Code: {port}";
+
         for (int i = 0; i < playerNameTexts.Length; i++)
         {
             playerNameTexts[i].text = "Waiting For Player...";

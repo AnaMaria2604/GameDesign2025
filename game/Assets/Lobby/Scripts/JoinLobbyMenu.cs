@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Diagnostics;
+using Mirror;
 
 public class JoinLobbyMenu : MonoBehaviour
 {
@@ -27,11 +29,20 @@ public class JoinLobbyMenu : MonoBehaviour
 
     public void JoinLobby()
     {
-        string ipAddress = ipAddressInputField.text;
-        networkManager.networkAddress = ipAddress;
+        string portInput = ipAddressInputField.text;
+        if (!ushort.TryParse(portInput, out ushort port))
+        {
+            UnityEngine.Debug.LogError("Invalid port entered!");
+            return;
+        }
+
+        networkManager.networkAddress = "localhost"; // Always localhost
+        networkManager.GetComponent<TelepathyTransport>().port = port;
+
         networkManager.StartClient();
         joinButton.interactable = false;
     }
+
 
     private void HandleClientConnected()
     {
