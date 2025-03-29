@@ -13,8 +13,10 @@ public class NetworkRoomPlayerLobby : NetworkBehaviour
     [SerializeField] private TMP_Text[] playerNameTexts = new TMP_Text[4];
     [SerializeField] private TMP_Text[] playerReadyTexts = new TMP_Text[4];
     [SerializeField] private Button startGameButton = null;
+    [SerializeField] private TextMeshProUGUI RoomCode = null;
 
-   
+
+
 
     private bool isLeader;
 
@@ -31,6 +33,7 @@ public class NetworkRoomPlayerLobby : NetworkBehaviour
         {
             isLeader = value;
             startGameButton.gameObject.SetActive(value);
+            startGameButton.interactable = false;
         }
     }
 
@@ -81,6 +84,9 @@ public class NetworkRoomPlayerLobby : NetworkBehaviour
             }
             return;
         }
+
+        string ip = NetworkManager.singleton.networkAddress;
+        RoomCode.text = "Room Code: " + ip.ToString();
         for (int i = 0; i < playerNameTexts.Length; i++)
         {
             playerNameTexts[i].text = "Waiting For Player...";

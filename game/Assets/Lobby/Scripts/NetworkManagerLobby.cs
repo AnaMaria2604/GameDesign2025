@@ -20,7 +20,7 @@ public class NetworkManagerLobby : NetworkManager
     public static event Action OnClientConnected;
     public static event Action OnClientDisconnected;
 
-    public List<NetworkRoomPlayerLobby> RoomPlayers  { get; } = new List<NetworkRoomPlayerLobby>();
+    public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();
     public List<NetworkGamePlayerLobby> GamePlayers { get; } = new List<NetworkGamePlayerLobby>();
 
     public override void OnStartServer() => spawnPrefabs = Resources.LoadAll<GameObject>("SpawnablePrefabs").ToList();
