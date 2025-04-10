@@ -16,11 +16,9 @@ public class NetworkRoomPlayerLobby : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI RoomCode = null;
 
 
-
-
     private bool isLeader;
 
-     [SyncVar(hook = nameof(HandleDisplayNameChanged))]
+    [SyncVar(hook = nameof(HandleDisplayNameChanged))]
     public string DisplayName = "Loading...";
     
 

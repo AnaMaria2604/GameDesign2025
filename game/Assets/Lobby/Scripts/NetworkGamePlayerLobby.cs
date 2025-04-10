@@ -13,6 +13,8 @@ public class NetworkGamePlayerLobby : NetworkBehaviour
 
     private NetworkManagerLobby room;
 
+    public string DisplayName => displayName;
+
     private NetworkManagerLobby Room
     {
         get
