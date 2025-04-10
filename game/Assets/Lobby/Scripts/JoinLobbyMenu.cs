@@ -36,7 +36,8 @@ public class JoinLobbyMenu : MonoBehaviour
             return;
         }
 
-        networkManager.networkAddress = "localhost"; // Always localhost: 192.168.137.1
+        //networkManager.networkAddress = "192.168.137.1";
+        networkManager.networkAddress = "localhost"; 
         networkManager.GetComponent<TelepathyTransport>().port = port;
 
         networkManager.StartClient();
