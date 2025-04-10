@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Asus\\Desktop\\GameDesign-repo\\game\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Asus\\Desktop\\GameDesign-repo\\game\\Assets\\Lobby\\Scripts\\DebugTest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Lobby\\Scripts\\DebugTest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Asus\\Desktop\\GameDesign-repo\\game\\Assets\\Lobby\\Scripts\\GameLogicManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Lobby\\Scripts\\GameLogicManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Asus\\Desktop\\GameDesign-repo\\game\\Assets\\Lobby\\Scripts\\DebugTest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Lobby\\Scripts\\DebugTest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Asus\\Desktop\\GameDesign-repo\\game\\Assets\\Lobby\\Scripts\\PawnDisplay.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -50,7 +50,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -58,7 +58,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "DebugTest.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\GameDesign-repo\\game\\Assets\\Lobby\\Scripts\\DebugTest.cs",
               "RelativeDocumentMoniker": "Assets\\Lobby\\Scripts\\DebugTest.cs",
@@ -95,13 +95,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "GameLogicManager.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\GameDesign-repo\\game\\Assets\\Lobby\\Scripts\\GameLogicManager.cs",
               "RelativeDocumentMoniker": "Assets\\Lobby\\Scripts\\GameLogicManager.cs",
               "ToolTip": "C:\\Users\\Asus\\Desktop\\GameDesign-repo\\game\\Assets\\Lobby\\Scripts\\GameLogicManager.cs",
               "RelativeToolTip": "Assets\\Lobby\\Scripts\\GameLogicManager.cs",
-              "ViewState": "AgIAACoAAAAAAAAAAAAAAEEAAAAUAAAAAAAAAA==",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAYwEYAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-09T22:30:32.23Z",
               "EditorCaption": ""

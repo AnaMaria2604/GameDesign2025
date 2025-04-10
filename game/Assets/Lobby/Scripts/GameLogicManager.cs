@@ -41,55 +41,30 @@ public class GameLogicManager : MonoBehaviour
     }
 
 
-    //private void SpawnPawnsForPlayers()
-    //{
-    //    var players = FindObjectsOfType<NetworkGamePlayerLobby>();
-
-    //    for (int i = 0; i < players.Length && i < playerZones.Count; i++)
-    //    {
-    //        var player = players[i];
-    //        Transform zone = playerZones[i];
-
-
-    //        for (int j = 0; j < 4; j++)
-    //        {
-    //            GameObject pawnGO = Instantiate(pawnPrefab, zone);
-
-    //            Sprite randomSprite = pawnSprites[Random.Range(0, pawnSprites.Count)];
-
-    //            PawnDisplay display = pawnGO.GetComponent<PawnDisplay>();
-    //            display.Setup(randomSprite, player.DisplayName);
-    //        }
-    //        UnityEngine.Debug.Log($"Spawnez pionii pentru {player.DisplayName}");
-
-    //    }
-    //    UnityEngine.Debug.Log($"Am gasit {players.Length} jucatori.");
-
-    //}
     private void SpawnPawnsForPlayers()
     {
-        Debug.Log(" NU sunt jucatori conectati – rulam simulare");
+        var players = FindObjectsOfType<NetworkGamePlayerLobby>();
 
-        for (int i = 0; i < playerZones.Count; i++)
+        Debug.Log($"Am gasit {players.Length} jucatori conectati.");
+
+        for (int i = 0; i < players.Length && i < playerZones.Count; i++)
         {
+            var player = players[i];
             Transform zone = playerZones[i];
 
             for (int j = 0; j < 4; j++)
             {
                 GameObject pawnGO = Instantiate(pawnPrefab, zone);
-                Debug.Log($" Pion instantiat in zona {zone.name}");
 
                 Sprite randomSprite = pawnSprites[Random.Range(0, pawnSprites.Count)];
-                var display = pawnGO.GetComponent<PawnDisplay>();
+                PawnDisplay display = pawnGO.GetComponent<PawnDisplay>();
+                display.Setup(randomSprite);
+            }
 
-                if (display == null)
-                {
-                    Debug.LogError(" PawnDisplay NU este setat pe prefab!");
-                }
-                else
-                {
-                    display.Setup(randomSprite, $"Player {i + 1}");
-                }
+            TMP_Text nameText = zone.GetComponentInChildren<TMP_Text>();
+            if (nameText != null)
+            {
+                nameText.text = player.DisplayName;
             }
         }
     }
