@@ -18,6 +18,8 @@ public class GameLogicManager : MonoBehaviour
     [SerializeField] private GameObject gameCanvas;
     [SerializeField] private float delayBeforeGameUI = 2.5f;
     [SerializeField] private AudioSource startSound;
+    [SerializeField] private List<TMP_Text> playerNameTexts;
+
     //[SerializeField] private UIFader uiFader;
 
     void Start()
@@ -61,7 +63,7 @@ public class GameLogicManager : MonoBehaviour
                 display.Setup(randomSprite);
             }
 
-            TMP_Text nameText = zone.GetComponentInChildren<TMP_Text>();
+            TMP_Text nameText = playerNameTexts[i];
             if (nameText != null)
             {
                 nameText.text = player.DisplayName;
