@@ -1,11 +1,12 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine;
 using System.Collections.Generic;
 using Mirror;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
+using System.Diagnostics;
+using System;
 
 public class GameLogicManager : MonoBehaviour
 {
@@ -44,32 +45,53 @@ public class GameLogicManager : MonoBehaviour
 
 
     private void SpawnPawnsForPlayers()
+{
+    var players = FindObjectsOfType<NetworkGamePlayerLobby>();
+    UnityEngine.Debug.Log($"Am gasit {players.Length} jucatori conectati.");
+
+    for (int i = 0; i < players.Length && i < playerZones.Count; i++)
     {
-        var players = FindObjectsOfType<NetworkGamePlayerLobby>();
+        var player = players[i];
+        Transform zone = playerZones[i];
 
-        Debug.Log($"Am gasit {players.Length} jucatori conectati.");
+        // Obținem sprite-ul aferent indexului de personaj al jucătorului
+        int index = player.CharacterIndex;
+        Sprite characterSprite = null;
 
-        for (int i = 0; i < players.Length && i < playerZones.Count; i++)
+        if (index >= 0 && index < pawnSprites.Count)
         {
-            var player = players[i];
-            Transform zone = playerZones[i];
+            characterSprite = pawnSprites[index];
+        }
+        else
+        {
+            UnityEngine.Debug.LogWarning($"Player {player.DisplayName} are un CharacterIndex invalid: {index}");
+            continue;
+        }
 
-            for (int j = 0; j < 4; j++)
-            {
-                GameObject pawnGO = Instantiate(pawnPrefab, zone);
+        // Instanțiem 4 pioni identici
+        for (int j = 0; j < 4; j++)
+        {
+            GameObject pawnGO = Instantiate(pawnPrefab, zone);
+            PawnDisplay display = pawnGO.GetComponent<PawnDisplay>();
+            display.Setup(characterSprite);
 
-                Sprite randomSprite = pawnSprites[Random.Range(0, pawnSprites.Count)];
-                PawnDisplay display = pawnGO.GetComponent<PawnDisplay>();
-                display.Setup(randomSprite);
-            }
+            // (Opțional) Dacă vrei să fie rețea-aware:
+            // var netIdentity = pawnGO.GetComponent<NetworkIdentity>();
+            // if (netIdentity != null && NetworkServer.active)
+            // {
+            //     NetworkServer.Spawn(pawnGO);
+            // }
+        }
 
-            TMP_Text nameText = playerNameTexts[i];
-            if (nameText != null)
-            {
-                nameText.text = player.DisplayName;
-            }
+        // Afișăm numele jucătorului
+        TMP_Text nameText = playerNameTexts[i];
+        if (nameText != null)
+        {
+            nameText.text = player.DisplayName;
         }
     }
+}
+
 
 
 }

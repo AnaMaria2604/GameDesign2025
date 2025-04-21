@@ -15,6 +15,10 @@ public class NetworkGamePlayerLobby : NetworkBehaviour
 
     public string DisplayName => displayName;
 
+    [SyncVar]
+    public int CharacterIndex = -1; // Indexul personajului selectat
+
+
     private NetworkManagerLobby Room
     {
         get

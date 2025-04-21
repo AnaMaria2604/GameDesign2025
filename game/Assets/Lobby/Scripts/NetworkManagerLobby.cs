@@ -119,14 +119,35 @@ public class NetworkManagerLobby : NetworkManager
     {
         if (SceneManager.GetActiveScene().path == menuScene && newSceneName.StartsWith("Scene_Map"))
         {
+            //for (int i = RoomPlayers.Count - 1; i >= 0; i--)
+            //{
+            //    var conn = RoomPlayers[i].connectionToClient;
+            //    var gameplayerInstance = Instantiate(gamePlayerPrefab);
+            //    gameplayerInstance.SetDisplayName(RoomPlayers[i].DisplayName);
+            //    NetworkServer.Destroy(conn.identity.gameObject);
+            //    NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject);
+            //}
+
+
+            List<int> assignedIndices = new List<int>();
+
             for (int i = RoomPlayers.Count - 1; i >= 0; i--)
             {
                 var conn = RoomPlayers[i].connectionToClient;
                 var gameplayerInstance = Instantiate(gamePlayerPrefab);
+
+                // Găsim un index nefolosit
+                int uniqueIndex = 0;
+                while (assignedIndices.Contains(uniqueIndex)) uniqueIndex++;
+                assignedIndices.Add(uniqueIndex);
+
                 gameplayerInstance.SetDisplayName(RoomPlayers[i].DisplayName);
+                gameplayerInstance.CharacterIndex = uniqueIndex; // <--- aici se setează personajul unic
+
                 NetworkServer.Destroy(conn.identity.gameObject);
                 NetworkServer.ReplacePlayerForConnection(conn, gameplayerInstance.gameObject);
             }
+
         }
         base.ServerChangeScene(newSceneName);
     }
