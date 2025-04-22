@@ -14,6 +14,8 @@ public class GameLogicManager : MonoBehaviour
     [SerializeField] private GameObject pawnPrefab;
     [SerializeField] private List<Transform> playerZones;
     [SerializeField] private List<Sprite> pawnSprites;
+    [SerializeField] private GameObject dicePrefab;
+    [SerializeField] private List<Dice> playerDice;
 
     [SerializeField] private GameObject loadingCanvas;
     [SerializeField] private GameObject gameCanvas;
@@ -45,55 +47,55 @@ public class GameLogicManager : MonoBehaviour
 
 
     private void SpawnPawnsForPlayers()
-{
-    var players = FindObjectsOfType<NetworkGamePlayerLobby>();
-    UnityEngine.Debug.Log($"Am gasit {players.Length} jucatori conectati.");
+    {
+        var players = FindObjectsOfType<NetworkGamePlayerLobby>();
+        UnityEngine.Debug.Log($"🎮 Am găsit {players.Length} jucători conectați.");
+
+        // Curățăm textele
         for (int i = 0; i < playerNameTexts.Count; i++)
         {
-            playerNameTexts[i].text = ""; // Golim toate sloturile
+            playerNameTexts[i].text = "";
         }
+
         for (int i = 0; i < players.Length && i < playerZones.Count; i++)
-    {
-        var player = players[i];
-        Transform zone = playerZones[i];
-
-        // Obținem sprite-ul aferent indexului de personaj al jucătorului
-        int index = player.CharacterIndex;
-        Sprite characterSprite = null;
-
-        if (index >= 0 && index < pawnSprites.Count)
         {
-            characterSprite = pawnSprites[index];
-        }
-        else
-        {
-            UnityEngine.Debug.LogWarning($"Player {player.DisplayName} are un CharacterIndex invalid: {index}");
-            continue;
-        }
+            var player = players[i];
+            Transform zone = playerZones[i];
 
-        // Instanțiem 4 pioni identici
-        for (int j = 0; j < 4; j++)
-        {
-            GameObject pawnGO = Instantiate(pawnPrefab, zone);
-            PawnDisplay display = pawnGO.GetComponent<PawnDisplay>();
-            display.Setup(characterSprite);
+            // 1. Obținem sprite-ul jucătorului
+            int index = player.CharacterIndex;
+            Sprite characterSprite = null;
 
-            // (Opțional) Dacă vrei să fie rețea-aware:
-            // var netIdentity = pawnGO.GetComponent<NetworkIdentity>();
-            // if (netIdentity != null && NetworkServer.active)
-            // {
-            //     NetworkServer.Spawn(pawnGO);
-            // }
-        }
+            if (index >= 0 && index < pawnSprites.Count)
+            {
+                characterSprite = pawnSprites[index];
+            }
+            else
+            {
+                UnityEngine.Debug.LogWarning($"⚠️ Player {player.DisplayName} are un CharacterIndex invalid: {index}");
+                continue;
+            }
 
-            // Afișăm numele jucătorului
+            // 2. Instanțiem pionii
+            for (int j = 0; j < 4; j++)
+            {
+                GameObject pawnGO = Instantiate(pawnPrefab, zone);
+                PawnDisplay display = pawnGO.GetComponent<PawnDisplay>();
+                display.Setup(characterSprite);
+            }
+
+            // 3. Afișăm numele jucătorului
             if (playerNameTexts[i] != null)
             {
                 playerNameTexts[i].text = player.DisplayName;
             }
+
+            // 4. Legăm Dice-ul de jucător
+            if (i < playerDice.Count)
+            {
+                playerDice[i].SetOwner(player.netIdentity); // 🧠 Dice.cs trebuie să aibă funcția SetOwner(NetworkIdentity)
+            }
         }
-}
-
-
+    }
 
 }

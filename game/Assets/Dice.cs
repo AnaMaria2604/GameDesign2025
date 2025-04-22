@@ -1,22 +1,54 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Mirror;
 using System.Collections;
-using static System.Net.Mime.MediaTypeNames;
-using System.Diagnostics;
-using System;
 
-public class Dice : MonoBehaviour
+public class Dice : NetworkBehaviour
 {
-    private Sprite[] diceSides;
     private UnityEngine.UI.Image image;
+    private Button rollButton;
+    private Sprite[] diceSides;
 
-    private void Start()
+    private NetworkIdentity owner;
+
+    [SyncVar]
+    public int lastResult;
+
+    [SyncVar(hook = nameof(OnTurnChanged))]
+    public bool isMyTurn = false;
+
+    public void SetOwner(NetworkIdentity player)
     {
-        image = GetComponent<UnityEngine.UI.Image>();
-        diceSides = Resources.LoadAll<Sprite>("DiceSides/");
+        owner = player;
     }
 
-    public void Roll()
+    void Start()
+    {
+        UnityEngine.Debug.Log("BUNAAA dice");
+        image = GetComponent<UnityEngine.UI.Image>();
+        rollButton = GetComponent<Button>();
+        diceSides = Resources.LoadAll<Sprite>("DiceSides/");
+
+        rollButton.onClick.AddListener(() =>
+        {
+
+            if (isMyTurn)
+            {
+                CmdRollDice();
+            }
+        });
+
+        rollButton.interactable = isMyTurn;
+    }
+
+    void OnTurnChanged(bool oldVal, bool newVal)
+    {
+        if (rollButton != null)
+            rollButton.interactable = newVal;
+    }
+
+    [Command(requiresAuthority = false)]
+    void CmdRollDice()
     {
         StartCoroutine(RollTheDice());
     }
@@ -24,7 +56,6 @@ public class Dice : MonoBehaviour
     private IEnumerator RollTheDice()
     {
         int randomDiceSide = 0;
-        int finalSide = 0;
 
         for (int i = 0; i < 20; i++)
         {
@@ -33,7 +64,13 @@ public class Dice : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
 
-        finalSide = randomDiceSide + 1;
-        UnityEngine.Debug.Log("Rezultat zar: " + finalSide);
+        lastResult = randomDiceSide + 1;
+        Debug.Log("Rezultat zar: " + lastResult);
+
+        // Trecem la următorul jucător
+        if (isServer)
+        {
+            FindObjectOfType<TurnManager>().NextTurn();
+        }
     }
 }
