@@ -48,8 +48,11 @@ public class GameLogicManager : MonoBehaviour
 {
     var players = FindObjectsOfType<NetworkGamePlayerLobby>();
     UnityEngine.Debug.Log($"Am gasit {players.Length} jucatori conectati.");
-
-    for (int i = 0; i < players.Length && i < playerZones.Count; i++)
+        for (int i = 0; i < playerNameTexts.Count; i++)
+        {
+            playerNameTexts[i].text = ""; // Golim toate sloturile
+        }
+        for (int i = 0; i < players.Length && i < playerZones.Count; i++)
     {
         var player = players[i];
         Transform zone = playerZones[i];
@@ -83,13 +86,12 @@ public class GameLogicManager : MonoBehaviour
             // }
         }
 
-        // Afișăm numele jucătorului
-        TMP_Text nameText = playerNameTexts[i];
-        if (nameText != null)
-        {
-            nameText.text = player.DisplayName;
+            // Afișăm numele jucătorului
+            if (playerNameTexts[i] != null)
+            {
+                playerNameTexts[i].text = player.DisplayName;
+            }
         }
-    }
 }
 
 
