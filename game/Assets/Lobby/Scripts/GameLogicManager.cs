@@ -91,9 +91,19 @@ public class GameLogicManager : MonoBehaviour
             }
 
             // 4. Legăm Dice-ul de jucător
-            if (i < playerDice.Count)
+            //if (i < playerDice.Count)
+            //{
+            //    playerDice[i].SetOwner(player.netIdentity); // 🧠 Dice.cs trebuie să aibă funcția SetOwner(NetworkIdentity)
+            //}
+            if (NetworkServer.active)
             {
-                playerDice[i].SetOwner(player.netIdentity); // 🧠 Dice.cs trebuie să aibă funcția SetOwner(NetworkIdentity)
+                GameObject diceGO = Instantiate(dicePrefab, zone); // zona unde vrei să apară zarul
+                NetworkServer.Spawn(diceGO, player.connectionToClient);
+
+                Dice dice = diceGO.GetComponent<Dice>();
+                dice.SetOwner(player.netIdentity); // legăm jucătorul cu zarul
+
+                playerDice.Add(dice); // dacă ai nevoie de listă
             }
         }
     }
