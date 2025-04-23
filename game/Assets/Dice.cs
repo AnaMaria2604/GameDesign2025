@@ -153,18 +153,56 @@ public class Dice : NetworkBehaviour
         for (int i = 0; i < 20; i++)
         {
             randomDiceSide = UnityEngine.Random.Range(0, diceSides.Length);
-            image.sprite = diceSides[randomDiceSide];
+            RpcUpdateDiceSprite(randomDiceSide); // trimite către toți
             yield return new WaitForSeconds(0.05f);
         }
+
 
         lastResult = randomDiceSide + 1;
         Debug.Log("Rezultat zar: " + lastResult);
 
-        // Apelam finalul de tura pe server
         if (isServer)
         {
             EndTurn();
         }
     }
+
+
+    public override void OnStartClient()
+    {
+        Debug.Log($"[CLIENT] Dice a fost spawnat | netId: {netId} | activeInHierarchy: {gameObject.activeInHierarchy}");
+
+        image = GetComponent<Image>();
+        if (image == null)
+        {
+            Debug.LogError("⚠️ Dice: Image component is missing!");
+        }
+
+        if (diceSides == null || diceSides.Length == 0)
+        {
+            diceSides = Resources.LoadAll<Sprite>("DiceSides/");
+            Debug.Log("🎨 Sprite-urile DiceSides au fost încărcate pe client.");
+        }
+
+        if (image != null)
+        {
+            image.enabled = true; // ✅ asigură-te că se vede
+            image.color = Color.white;
+        }
+    }
+
+
+
+
+    [ClientRpc]
+    void RpcUpdateDiceSprite(int spriteIndex)
+    {
+        if (image != null && diceSides != null && spriteIndex < diceSides.Length)
+        {
+            image.sprite = diceSides[spriteIndex];
+        }
+    }
+
+
 
 }

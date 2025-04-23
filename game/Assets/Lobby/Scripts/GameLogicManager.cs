@@ -97,15 +97,33 @@ public class GameLogicManager : MonoBehaviour
             //}
             if (NetworkServer.active)
             {
-                GameObject diceGO = Instantiate(dicePrefab, zone); // zona unde vrei să apară zarul
+                if (dicePrefab == null)
+                {
+                    UnityEngine.Debug.LogError("🚨 DicePrefab este NULL la instanțiere!");
+                    continue;
+                }
+
+                GameObject diceGO = Instantiate(dicePrefab, zone);
                 NetworkServer.Spawn(diceGO, player.connectionToClient);
 
-                Dice dice = diceGO.GetComponent<Dice>();
-                dice.SetOwner(player.netIdentity); // legăm jucătorul cu zarul
+                UnityEngine.Debug.Log($"🎲 Zar instanțiat pentru {player.DisplayName}, netId={player.netId}");
 
-                playerDice.Add(dice); // dacă ai nevoie de listă
+                Dice dice = diceGO.GetComponent<Dice>();
+                if (dice == null)
+                {
+                    UnityEngine.Debug.LogError("⚠️ Dice.cs lipsește de pe prefab!");
+                    continue;
+                }
+
+                dice.SetOwner(player.netIdentity);
+                playerDice.Add(dice);
+            }
+            else
+            {
+                UnityEngine.Debug.Log("⚠️ Suntem pe client, nu pe server, nu instanțiem zaruri.");
             }
         }
     }
+    
 
 }

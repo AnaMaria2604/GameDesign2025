@@ -95,9 +95,10 @@ public class TurnManager : NetworkBehaviour
     void InitializeTurnOrder()
     {
         var players = FindObjectsOfType<NetworkGamePlayerLobby>();
-        playerDice = new List<Dice>(FindObjectsOfType<Dice>());
+        var foundDice = FindObjectsOfType<Dice>();
+        playerDice = new List<Dice>(foundDice);
 
-        if (playerDice.Count == 0 || players.Length == 0)
+        if (players.Length == 0 || playerDice.Count == 0)
         {
             Debug.LogWarning("Nu s-au gasit zaruri sau jucatori.");
             return;
@@ -109,8 +110,9 @@ public class TurnManager : NetworkBehaviour
         }
 
         currentTurnIndex = -1;
-        NextTurn(); // Pornim tura automat
+        NextTurn(); // pornește prima tură
     }
+
 
     //[Server]
     //public void NextTurn()
@@ -154,30 +156,30 @@ public class TurnManager : NetworkBehaviour
     {
         if (playerDice.Count == 0) return;
 
-        // Dezactiveaza butoanele tuturor
         foreach (var dice in playerDice)
         {
             var identity = dice.GetComponent<NetworkIdentity>();
-            if (identity != null && identity.connectionToClient != null)
+            if (identity != null)
             {
                 dice.TargetSetActive(identity.connectionToClient, false);
+                identity.RemoveClientAuthority();
             }
         }
 
-        // Incrementeaza indexul turei
         currentTurnIndex = (currentTurnIndex + 1) % playerDice.Count;
 
-        var nextDice = playerDice[currentTurnIndex];
-        var nextIdentity = nextDice.GetComponent<NetworkIdentity>();
-        var nextConnection = nextIdentity.connectionToClient;
+        var currentDice = playerDice[currentTurnIndex];
+        var id = currentDice.GetComponent<NetworkIdentity>();
 
-        if (nextConnection != null)
+        if (id != null && id.connectionToClient != null)
         {
-            TransferDiceAuthority(nextDice, nextConnection);
-            nextDice.TargetSetActive(nextConnection, true);
-            Debug.Log("Autoritatea si tura au fost mutate la jucatorul " + currentTurnIndex);
+            id.AssignClientAuthority(id.connectionToClient);
+            currentDice.TargetSetActive(id.connectionToClient, true);
+            Debug.Log($"Tura mutata la jucatorul {currentTurnIndex}");
         }
     }
+
+
 
 
 
