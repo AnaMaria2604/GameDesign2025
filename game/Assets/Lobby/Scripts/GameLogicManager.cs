@@ -21,6 +21,7 @@ public class GameLogicManager : MonoBehaviour
     [SerializeField] private AudioSource startSound;
     [SerializeField] private List<TMP_Text> playerNameTexts;
 
+
     //[SerializeField] private UIFader uiFader;
 
     void Start()
@@ -41,6 +42,29 @@ public class GameLogicManager : MonoBehaviour
         gameCanvas.SetActive(true);
 
         SpawnPawnsForPlayers();
+        SpawnDiceForEachPlayer();
+    }
+
+   
+
+    
+
+    private void SpawnDiceForEachPlayer()
+    {
+        GameObject dicePrefab = Resources.Load<GameObject>("SpawnablePrefabs/Dice");
+
+        if (dicePrefab == null || !NetworkServer.active)
+            return;
+
+        var players = FindObjectsOfType<NetworkGamePlayerLobby>();
+
+        for (int i = 0; i < players.Length && i < playerZones.Count; i++)
+        {
+            Vector3 spawnPos = playerZones[i].position + new Vector3(1, 0, 0); // zarul la dreapta fiecărei zone
+
+            GameObject diceInstance = Instantiate(dicePrefab, spawnPos, Quaternion.identity);
+            NetworkServer.Spawn(diceInstance);
+        }
     }
 
 

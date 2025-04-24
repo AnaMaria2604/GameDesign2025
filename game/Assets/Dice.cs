@@ -1,11 +1,9 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using static System.Net.Mime.MediaTypeNames;
-using System.Diagnostics;
-using System;
 
-public class Dice : MonoBehaviour
+public class Dice : NetworkBehaviour
 {
     private Sprite[] diceSides;
     private UnityEngine.UI.Image image;
@@ -16,6 +14,7 @@ public class Dice : MonoBehaviour
         diceSides = Resources.LoadAll<Sprite>("DiceSides/");
     }
 
+    [Server]
     public void Roll()
     {
         StartCoroutine(RollTheDice());
@@ -24,16 +23,23 @@ public class Dice : MonoBehaviour
     private IEnumerator RollTheDice()
     {
         int randomDiceSide = 0;
-        int finalSide = 0;
 
         for (int i = 0; i < 20; i++)
         {
             randomDiceSide = UnityEngine.Random.Range(0, diceSides.Length);
-            image.sprite = diceSides[randomDiceSide];
+            RpcSetSprite(randomDiceSide);
             yield return new WaitForSeconds(0.05f);
         }
 
-        finalSide = randomDiceSide + 1;
-        UnityEngine.Debug.Log("Rezultat zar: " + finalSide);
+        int finalSide = randomDiceSide + 1;
+        UnityEngine.Debug.Log("Rezultat final zar: " + finalSide);
+    }
+
+    [ClientRpc]
+    private void RpcSetSprite(int index)
+    {
+        if (diceSides.Length > index)
+            image.sprite = diceSides[index];
     }
 }
+
