@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1744777052859829741}
   - component: {fileID: 2503064024419856323}
   - component: {fileID: 4902765080209816148}
-  - component: {fileID: 6549122968074355160}
+  - component: {fileID: 5024804505723072559}
   m_Layer: 5
   m_Name: Dice
   m_TagString: Untagged
@@ -146,7 +146,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 120723ede7aeca4469c83cc87a3fd701, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6549122968074355160
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+--- !u!114 &5024804505723072559
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
