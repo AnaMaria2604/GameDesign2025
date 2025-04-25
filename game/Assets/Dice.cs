@@ -1,21 +1,52 @@
-﻿using Mirror;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using Mirror;
 using System.Collections;
+using static System.Net.Mime.MediaTypeNames;
 
 public class Dice : NetworkBehaviour
 {
-    private Sprite[] diceSides;
     private UnityEngine.UI.Image image;
+    private Button rollButton;
+    private Sprite[] diceSides;
+    private bool hasRolled = false;
 
-    private void Start()
+    [SyncVar]
+    public int lastResult;
+
+    public override void OnStartAuthority()
     {
         image = GetComponent<UnityEngine.UI.Image>();
+        rollButton = GetComponent<Button>();
         diceSides = Resources.LoadAll<Sprite>("DiceSides/");
+
+        rollButton.onClick.AddListener(() =>
+        {
+            if (rollButton.interactable && !hasRolled)
+            {
+                hasRolled = true;
+                CmdRollDice();
+            }
+        });
     }
 
-    [Server]
-    public void Roll()
+    public override void OnStartClient()
+    {
+        image = GetComponent<UnityEngine.UI.Image>();
+        if (diceSides == null || diceSides.Length == 0)
+        {
+            diceSides = Resources.LoadAll<Sprite>("DiceSides/");
+        }
+
+        if (image != null)
+        {
+            image.enabled = true;
+            image.color = Color.white;
+        }
+    }
+
+    [Command]
+    void CmdRollDice()
     {
         StartCoroutine(RollTheDice());
     }
@@ -27,19 +58,47 @@ public class Dice : NetworkBehaviour
         for (int i = 0; i < 20; i++)
         {
             randomDiceSide = UnityEngine.Random.Range(0, diceSides.Length);
-            RpcSetSprite(randomDiceSide);
+            RpcUpdateDiceSprite(randomDiceSide);
             yield return new WaitForSeconds(0.05f);
         }
 
-        int finalSide = randomDiceSide + 1;
-        UnityEngine.Debug.Log("Rezultat final zar: " + finalSide);
+        lastResult = randomDiceSide + 1;
+
+        if (isServer)
+        {
+            EndTurn();
+        }
     }
 
     [ClientRpc]
-    private void RpcSetSprite(int index)
+    void RpcUpdateDiceSprite(int spriteIndex)
     {
-        if (diceSides.Length > index)
-            image.sprite = diceSides[index];
+        if (image != null && diceSides != null && spriteIndex < diceSides.Length)
+        {
+            image.sprite = diceSides[spriteIndex];
+        }
+    }
+
+    [TargetRpc]
+    public void TargetSetActive(NetworkConnection target, bool active)
+    {
+        if (rollButton != null)
+        {
+            rollButton.interactable = active;
+            if (active)
+            {
+                hasRolled = false;
+            }
+        }
+    }
+
+    [Server]
+    private void EndTurn()
+    {
+        TurnManager turnManager = FindObjectOfType<TurnManager>();
+        if (turnManager != null)
+        {
+            turnManager.NextTurn();
+        }
     }
 }
-
