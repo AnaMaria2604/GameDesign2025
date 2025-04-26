@@ -68,8 +68,7 @@ public class GameLogicManager : MonoBehaviour
         for (int i = 0; i < players.Length && i < playerZones.Count; i++)
         {
             var player = players[i];
-            UnityEngine.Debug.Log("Buna");
-            UnityEngine.Debug.Log(player);
+         
             Transform zone = playerZones[i]; // Aici e zona vizuală în care apar pionii, EX: PlayerZone_TopLeft
             UnityEngine.Debug.Log(zone);
 
@@ -88,10 +87,14 @@ public class GameLogicManager : MonoBehaviour
                 display.Setup(characterSprite);
 
                 PawnMovement movement = pawnGO.GetComponent<PawnMovement>();
-                UnityEngine.Debug.Log(zone);
-                movement.homeZone = zone; // aici îi spunem pionului unde este "acasă"
-                UnityEngine.Debug.Log(movement.homeZone);
-                movement.startSquare = GetStartSquareForPlayer(i); // aici îi spunem unde este "Start-ul" de ieșire
+                //movement.homeZone = zone; // aici îi spunem pionului unde este "acasă"
+                //movement.startSquare = GetStartSquareForPlayer(i); // aici îi spunem unde este "Start-ul" de ieșire
+                if (movement != null)
+                {
+                    movement.homeZone = zone;
+                    movement.startSquare = GetStartSquareForPlayer(i);
+                    movement.Owner = player; // 🛠 setăm Owner-ul pionului
+                }
             }
 
             if (playerNameTexts[i] != null)

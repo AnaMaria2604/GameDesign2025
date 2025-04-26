@@ -4,6 +4,7 @@ using Mirror;
 using System.Collections;
 using static System.Net.Mime.MediaTypeNames;
 using System.Linq;
+using System.Diagnostics;
 
 public class Dice : NetworkBehaviour
 {
@@ -54,22 +55,32 @@ public class Dice : NetworkBehaviour
 
     private void MovePawnOutOfHome()
     {
+        UnityEngine.Debug.Log("Buna");
         var players = FindObjectsOfType<NetworkGamePlayerLobby>();
         var localPlayer = players.FirstOrDefault(p => p.isOwned);
 
         if (localPlayer == null) return;
 
-        var pawns = localPlayer.GetComponentsInChildren<PawnMovement>();
+        UnityEngine.Debug.Log("Buna2");
+
+        // 🛠 Schimbăm aici
+        var pawns = FindObjectsOfType<PawnMovement>(); // caută toți pionii din scenă!
 
         foreach (var pawn in pawns)
         {
-            if (!pawn.isOnBoard)
+            UnityEngine.Debug.Log("Buna3");
+
+            // Verificăm dacă pionul aparține jucătorului curent
+            if (!pawn.isOnBoard && pawn.Owner == localPlayer)
             {
                 pawn.MoveToStart();
-                break; // mutăm doar unul!
+                UnityEngine.Debug.Log("Buna4");
+                break; // mutăm doar unul
             }
         }
+        UnityEngine.Debug.Log("Pa");
     }
+
 
 
     private IEnumerator RollTheDice()
@@ -84,11 +95,12 @@ public class Dice : NetworkBehaviour
         }
 
         lastResult = randomDiceSide + 1;
+        MovePawnOutOfHome();
 
-        if (lastResult == 6)
-        {
-            MovePawnOutOfHome();
-        }
+        //if (lastResult == 6)
+        //{
+        //    MovePawnOutOfHome();
+        //}
 
         if (isServer)
         {
