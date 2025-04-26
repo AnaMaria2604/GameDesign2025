@@ -40,6 +40,19 @@ public class GameLogicManager : MonoBehaviour
         }
     }
 
+    private Transform GetStartSquareForPlayer(int playerIndex)
+    {
+        switch (playerIndex)
+        {
+            case 0: return GameObject.Find("Start_TopLeft").transform;
+            case 1: return GameObject.Find("Start_TopRight").transform;
+            case 2: return GameObject.Find("Start_BottomRight").transform;
+            case 3: return GameObject.Find("Start_BottomLeft").transform;
+            default: return null;
+        }
+    }
+
+
     private void SpawnPawnsForPlayers()
     {
         var players = FindObjectsOfType<NetworkGamePlayerLobby>();
@@ -49,17 +62,22 @@ public class GameLogicManager : MonoBehaviour
             playerNameTexts[i].text = "";
         }
 
+        // În loc să folosim direct zona părinților, setăm clar HomeZone
+
+        
         for (int i = 0; i < players.Length && i < playerZones.Count; i++)
         {
             var player = players[i];
-            Transform zone = playerZones[i];
+            UnityEngine.Debug.Log("Buna");
+            UnityEngine.Debug.Log(player);
+            Transform zone = playerZones[i]; // Aici e zona vizuală în care apar pionii, EX: PlayerZone_TopLeft
+            UnityEngine.Debug.Log(zone);
 
             int index = player.CharacterIndex;
             Sprite characterSprite = (index >= 0 && index < pawnSprites.Count) ? pawnSprites[index] : null;
 
             if (characterSprite == null)
             {
-                //Debug.LogWarning($"⚠️ Sprite invalid pentru playerul {player.DisplayName}");
                 continue;
             }
 
@@ -68,6 +86,12 @@ public class GameLogicManager : MonoBehaviour
                 GameObject pawnGO = Instantiate(pawnPrefab, zone);
                 PawnDisplay display = pawnGO.GetComponent<PawnDisplay>();
                 display.Setup(characterSprite);
+
+                PawnMovement movement = pawnGO.GetComponent<PawnMovement>();
+                UnityEngine.Debug.Log(zone);
+                movement.homeZone = zone; // aici îi spunem pionului unde este "acasă"
+                UnityEngine.Debug.Log(movement.homeZone);
+                movement.startSquare = GetStartSquareForPlayer(i); // aici îi spunem unde este "Start-ul" de ieșire
             }
 
             if (playerNameTexts[i] != null)
@@ -75,5 +99,6 @@ public class GameLogicManager : MonoBehaviour
                 playerNameTexts[i].text = player.DisplayName;
             }
         }
+
     }
 }

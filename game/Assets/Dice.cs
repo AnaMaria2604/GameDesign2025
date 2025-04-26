@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using Mirror;
 using System.Collections;
 using static System.Net.Mime.MediaTypeNames;
+using System.Linq;
 
 public class Dice : NetworkBehaviour
 {
@@ -51,6 +52,26 @@ public class Dice : NetworkBehaviour
         StartCoroutine(RollTheDice());
     }
 
+    private void MovePawnOutOfHome()
+    {
+        var players = FindObjectsOfType<NetworkGamePlayerLobby>();
+        var localPlayer = players.FirstOrDefault(p => p.isOwned);
+
+        if (localPlayer == null) return;
+
+        var pawns = localPlayer.GetComponentsInChildren<PawnMovement>();
+
+        foreach (var pawn in pawns)
+        {
+            if (!pawn.isOnBoard)
+            {
+                pawn.MoveToStart();
+                break; // mutăm doar unul!
+            }
+        }
+    }
+
+
     private IEnumerator RollTheDice()
     {
         int randomDiceSide = 0;
@@ -64,10 +85,17 @@ public class Dice : NetworkBehaviour
 
         lastResult = randomDiceSide + 1;
 
+        if (lastResult == 6)
+        {
+            MovePawnOutOfHome();
+        }
+
         if (isServer)
         {
             EndTurn();
         }
+
+
     }
 
     [ClientRpc]
