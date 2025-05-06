@@ -1,24 +1,20 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using Mirror;
 using System.Collections;
-using static System.Net.Mime.MediaTypeNames;
 using System.Linq;
-using System.Diagnostics;
 
-public class Dice : NetworkBehaviour
+public class Dice : MonoBehaviour
 {
-    private UnityEngine.UI.Image image;
+    private Image image;
     private Button rollButton;
     private Sprite[] diceSides;
     private bool hasRolled = false;
 
-    [SyncVar]
     public int lastResult;
 
-    public override void OnStartAuthority()
+    private void Start()
     {
-        image = GetComponent<UnityEngine.UI.Image>();
+        image = GetComponent<Image>();
         rollButton = GetComponent<Button>();
         diceSides = Resources.LoadAll<Sprite>("DiceSides/");
 
@@ -27,61 +23,24 @@ public class Dice : NetworkBehaviour
             if (rollButton.interactable && !hasRolled)
             {
                 hasRolled = true;
-                CmdRollDice();
+                StartCoroutine(RollTheDice());
             }
         });
     }
 
-    public override void OnStartClient()
-    {
-        image = GetComponent<UnityEngine.UI.Image>();
-        if (diceSides == null || diceSides.Length == 0)
-        {
-            diceSides = Resources.LoadAll<Sprite>("DiceSides/");
-        }
-
-        if (image != null)
-        {
-            image.enabled = true;
-            image.color = Color.white;
-        }
-    }
-
-    [Command]
-    void CmdRollDice()
-    {
-        StartCoroutine(RollTheDice());
-    }
-
     private void MovePawnOutOfHome()
     {
-        UnityEngine.Debug.Log("Buna");
-        var players = FindObjectsOfType<NetworkGamePlayerLobby>();
-        var localPlayer = players.FirstOrDefault(p => p.isOwned);
-
-        if (localPlayer == null) return;
-
-        UnityEngine.Debug.Log("Buna2");
-
-        // 🛠 Schimbăm aici
-        var pawns = FindObjectsOfType<PawnMovement>(); // caută toți pionii din scenă!
+        var pawns = FindObjectsOfType<PawnMovement>();
 
         foreach (var pawn in pawns)
         {
-            UnityEngine.Debug.Log("Buna3");
-
-            // Verificăm dacă pionul aparține jucătorului curent
-            if (!pawn.isOnBoard && pawn.Owner == localPlayer)
+            if (!pawn.isOnBoard)
             {
                 pawn.MoveToStart();
-                UnityEngine.Debug.Log("Buna4");
-                break; // mutăm doar unul
+                break;
             }
         }
-        UnityEngine.Debug.Log("Pa");
     }
-
-
 
     private IEnumerator RollTheDice()
     {
@@ -89,29 +48,86 @@ public class Dice : NetworkBehaviour
 
         for (int i = 0; i < 20; i++)
         {
-            randomDiceSide = UnityEngine.Random.Range(0, diceSides.Length);
-            RpcUpdateDiceSprite(randomDiceSide);
+            randomDiceSide = Random.Range(0, diceSides.Length);
+            UpdateDiceSprite(randomDiceSide);
             yield return new WaitForSeconds(0.05f);
         }
 
         lastResult = randomDiceSide + 1;
         MovePawnOutOfHome();
 
-        //if (lastResult == 6)
-        //{
-        //    MovePawnOutOfHome();
-        //}
-
-        if (isServer)
+        TurnManager turnManager = FindObjectOfType<TurnManager>();
+        if (turnManager != null)
         {
-            EndTurn();
+            turnManager.NextTurn();
         }
-
-
     }
+// private IEnumerator RollTheDice()
+// {
+//     int randomDiceSide = 0;
 
-    [ClientRpc]
-    void RpcUpdateDiceSprite(int spriteIndex)
+//     for (int i = 0; i < 20; i++)
+//     {
+//         randomDiceSide = Random.Range(0, diceSides.Length);
+//         UpdateDiceSprite(randomDiceSide);
+//         yield return new WaitForSeconds(0.05f);
+//     }
+
+//     lastResult = randomDiceSide + 1;
+
+//     // Move pawn logic here (if needed)
+
+//     // Blochează zarul imediat
+//     SetActive(false);
+
+//     // Treci la următorul jucător după o mică pauză
+//     yield return new WaitForSeconds(0.5f);
+    
+//     TurnManager turnManager = FindObjectOfType<TurnManager>();
+//     if (turnManager != null)
+//     {
+//         turnManager.NextTurn();
+//     }
+// }
+
+// private IEnumerator RollTheDice()
+// {
+//     int randomDiceSide = 0;
+
+//     for (int i = 0; i < 20; i++)
+//     {
+//         randomDiceSide = Random.Range(0, diceSides.Length);
+//         UpdateDiceSprite(randomDiceSide);
+//         yield return new WaitForSeconds(0.05f);
+//     }
+
+//     lastResult = randomDiceSide + 1;
+
+//     // Blochează zarul imediat după rulare
+//     SetActive(false);
+
+//     // Mută un pion al jucătorului curent dacă există vreunul neactiv
+//     TurnManager turnManager = FindObjectOfType<TurnManager>();
+//     if (turnManager != null)
+//     {
+//         LocalPlayer currentPlayer = turnManager.GetCurrentPlayer();
+//         PawnMovement[] pawns = FindObjectsOfType<PawnMovement>();
+
+//         foreach (var pawn in pawns)
+//         {
+//             if (pawn.Owner == currentPlayer && !pawn.isOnBoard)
+//             {
+//                 pawn.MoveToStart();
+//                 break; // mutăm doar primul găsit
+//             }
+//         }
+
+//         yield return new WaitForSeconds(0.5f);
+//         turnManager.NextTurn();
+//     }
+// }
+
+    private void UpdateDiceSprite(int spriteIndex)
     {
         if (image != null && diceSides != null && spriteIndex < diceSides.Length)
         {
@@ -119,8 +135,7 @@ public class Dice : NetworkBehaviour
         }
     }
 
-    [TargetRpc]
-    public void TargetSetActive(NetworkConnection target, bool active)
+    public void SetActive(bool active)
     {
         if (rollButton != null)
         {
@@ -129,16 +144,6 @@ public class Dice : NetworkBehaviour
             {
                 hasRolled = false;
             }
-        }
-    }
-
-    [Server]
-    private void EndTurn()
-    {
-        TurnManager turnManager = FindObjectOfType<TurnManager>();
-        if (turnManager != null)
-        {
-            turnManager.NextTurn();
         }
     }
 }

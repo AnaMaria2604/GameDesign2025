@@ -1,76 +1,143 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
-using System.Diagnostics;
 using TMPro;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI; // ← aceasta e esențială pentru Button
 
 
-public class TurnManager : NetworkBehaviour
+public class TurnManager : MonoBehaviour
 {
-    [SyncVar] private int currentTurnIndex = -1;
+    private int currentTurnIndex = -1;
 
-    private List<NetworkGamePlayerLobby> players = new List<NetworkGamePlayerLobby>();
+    private List<LocalPlayer> players = new List<LocalPlayer>();
     [SerializeField] private Dice globalDice;
-
     [SerializeField] private TMP_Text turnLabel;
 
+    [Header("Confirm Button")]
+    [SerializeField] private Button confirmButton;
 
-    public override void OnStartServer()
+    private void Start()
     {
-        Invoke(nameof(InitializeTurnOrder), 1f);
+        InitializeTurnOrder();
+    }
+// public LocalPlayer GetCurrentPlayer()
+// {
+//     return players[currentTurnIndex];
+// }
+
+// public void ValidateNames()
+// {
+//     bool hasAtLeastOneName = false;
+
+//     for (int i = 0; i < GameSettings.NumberOfPlayers; i++)
+//     {
+//         if (!string.IsNullOrWhiteSpace(nameInputs[i].text))
+//         {
+//             hasAtLeastOneName = true;
+//             break;
+//         }
+//     }
+
+//     confirmButton.interactable = hasAtLeastOneName;
+// }
+
+//     void InitializeTurnOrder()
+// {
+//     players.Clear();
+
+//     for (int i = 0; i < GameSettings.NumberOfPlayers; i++)
+//     {
+//         players.Add(new LocalPlayer
+//         {
+//             DisplayName = GameSettings.PlayerNames[i],
+//             CharacterIndex = i
+//         });
+//     }
+
+//     if (globalDice == null)
+//     {
+//         globalDice = FindObjectOfType<Dice>();
+//     }
+
+//     if (players.Count == 0 || globalDice == null)
+//     {
+//         return;
+//     }
+
+//     currentTurnIndex = -1;
+//     NextTurn();
+// }
+void InitializeTurnOrder()
+{
+    players.Clear();
+
+    if (GameSettings.PlayerNames == null || GameSettings.PlayerNames.Count < GameSettings.NumberOfPlayers)
+    {
+        Debug.LogWarning("⚠ TurnManager: Player names list is missing or incomplete. Using fallback names.");
+        for (int i = 0; i < GameSettings.NumberOfPlayers; i++)
+        {
+            players.Add(new LocalPlayer
+            {
+                DisplayName = $"Player {i + 1}",
+                CharacterIndex = i
+            });
+        }
+    }
+    else
+    {
+        for (int i = 0; i < GameSettings.NumberOfPlayers; i++)
+        {
+            players.Add(new LocalPlayer
+            {
+                DisplayName = GameSettings.PlayerNames[i],
+                CharacterIndex = i
+            });
+        }
     }
 
-    [Server]
-    void InitializeTurnOrder()
+    if (globalDice == null)
     {
-        players = new List<NetworkGamePlayerLobby>(FindObjectsOfType<NetworkGamePlayerLobby>());
-
-        if (globalDice == null)
-        {
-            globalDice = FindObjectOfType<Dice>();
-        }
-
-        if (players.Count == 0 || globalDice == null)
-        {
-            //Debug.LogError("❌ Jucători sau zarul lipsesc!");
-            return;
-        }
-
-        currentTurnIndex = -1;
-        NextTurn();
+        globalDice = FindObjectOfType<Dice>();
     }
 
-    [Server]
+    if (players.Count == 0 || globalDice == null)
+    {
+        return;
+    }
+
+    currentTurnIndex = -1;
+    NextTurn();
+}
+
+// public void NextTurn()
+// {
+//     if (players.Count == 0 || globalDice == null) return;
+
+//     currentTurnIndex = (currentTurnIndex + 1) % players.Count;
+//     var nextPlayer = players[currentTurnIndex];
+
+//     globalDice.SetActive(true); // ← activăm zarul DOAR pentru jucătorul curent
+//     UpdateTurnLabel(nextPlayer.DisplayName);
+// }
+
     public void NextTurn()
     {
         if (players.Count == 0 || globalDice == null) return;
 
-        var identity = globalDice.GetComponent<NetworkIdentity>();
-       
-            identity.RemoveClientAuthority();
-        
-
         currentTurnIndex = (currentTurnIndex + 1) % players.Count;
         var nextPlayer = players[currentTurnIndex];
 
-        if (nextPlayer != null && nextPlayer.connectionToClient != null)
-        {
-            identity.AssignClientAuthority(nextPlayer.connectionToClient);
-            globalDice.TargetSetActive(nextPlayer.connectionToClient, true);
-            RpcUpdateTurnLabel(nextPlayer.DisplayName);
-            //Debug.Log("🎲 Tura este acum la: " + nextPlayer.DisplayName);
-        }
-
-       
+        globalDice.SetActive(true);
+        UpdateTurnLabel(nextPlayer.DisplayName);
     }
 
-    [ClientRpc]
-    void RpcUpdateTurnLabel(string displayName)
+    void UpdateTurnLabel(string displayName)
+{
+    if (turnLabel != null)
     {
-        if (turnLabel != null)
-        {
-            turnLabel.text = $"It's <b>{displayName}</b>'s turn!";
-        }
+        string label = string.IsNullOrWhiteSpace(displayName) ? "Unnamed Player" : displayName;
+        turnLabel.text = $"It's <b>{label}</b>'s turn!";
     }
+}
 
 }

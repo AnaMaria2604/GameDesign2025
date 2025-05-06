@@ -1,9 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
-using Mirror;
 using TMPro;
-using System.Diagnostics;
 
 public class GameLogicManager : MonoBehaviour
 {
@@ -18,10 +16,54 @@ public class GameLogicManager : MonoBehaviour
     [SerializeField] private AudioSource startSound;
     [SerializeField] private List<TMP_Text> playerNameTexts;
 
+    private List<LocalPlayer> players = new List<LocalPlayer>();
+
     void Start()
     {
+        SetupLocalPlayers();
         StartCoroutine(ShowGameBoardAfterDelay());
     }
+
+//     private void SetupLocalPlayers()
+// {
+//     for (int i = 0; i < GameSettings.NumberOfPlayers; i++)
+//     {
+//         players.Add(new LocalPlayer
+//         {
+//             DisplayName = GameSettings.PlayerNames[i],
+//             CharacterIndex = i
+//         });
+//     }
+// }
+private void SetupLocalPlayers()
+{
+    players.Clear();
+
+    if (GameSettings.PlayerNames == null || GameSettings.PlayerNames.Count < GameSettings.NumberOfPlayers)
+    {
+        Debug.LogWarning("⚠ Player names list is missing or incomplete. Using fallback names.");
+        for (int i = 0; i < GameSettings.NumberOfPlayers; i++)
+        {
+            players.Add(new LocalPlayer
+            {
+                DisplayName = $"Player {i + 1}",
+                CharacterIndex = i
+            });
+        }
+        return;
+    }
+
+    for (int i = 0; i < GameSettings.NumberOfPlayers; i++)
+    {
+        players.Add(new LocalPlayer
+        {
+            DisplayName = GameSettings.PlayerNames[i],
+            CharacterIndex = i
+        });
+    }
+}
+
+
 
     private IEnumerator ShowGameBoardAfterDelay()
     {
@@ -32,11 +74,9 @@ public class GameLogicManager : MonoBehaviour
 
         SpawnPawnsForPlayers();
 
-        if (NetworkServer.active && dicePrefab != null)
+        if (dicePrefab != null)
         {
-            GameObject diceGO = Instantiate(dicePrefab, Vector3.zero, Quaternion.identity);
-            NetworkServer.Spawn(diceGO);
-            //Debug.Log("🎲 Zar global instanțiat.");
+            Instantiate(dicePrefab, Vector3.zero, Quaternion.identity);
         }
     }
 
@@ -52,33 +92,21 @@ public class GameLogicManager : MonoBehaviour
         }
     }
 
-
     private void SpawnPawnsForPlayers()
     {
-        var players = FindObjectsOfType<NetworkGamePlayerLobby>();
-
         for (int i = 0; i < playerNameTexts.Count; i++)
         {
             playerNameTexts[i].text = "";
         }
 
-        // În loc să folosim direct zona părinților, setăm clar HomeZone
-
-        
-        for (int i = 0; i < players.Length && i < playerZones.Count; i++)
+        for (int i = 0; i < players.Count && i < playerZones.Count; i++)
         {
             var player = players[i];
-         
-            Transform zone = playerZones[i]; // Aici e zona vizuală în care apar pionii, EX: PlayerZone_TopLeft
-            UnityEngine.Debug.Log(zone);
-
+            Transform zone = playerZones[i];
             int index = player.CharacterIndex;
             Sprite characterSprite = (index >= 0 && index < pawnSprites.Count) ? pawnSprites[index] : null;
 
-            if (characterSprite == null)
-            {
-                continue;
-            }
+            if (characterSprite == null) continue;
 
             for (int j = 0; j < 4; j++)
             {
@@ -87,13 +115,11 @@ public class GameLogicManager : MonoBehaviour
                 display.Setup(characterSprite);
 
                 PawnMovement movement = pawnGO.GetComponent<PawnMovement>();
-                //movement.homeZone = zone; // aici îi spunem pionului unde este "acasă"
-                //movement.startSquare = GetStartSquareForPlayer(i); // aici îi spunem unde este "Start-ul" de ieșire
                 if (movement != null)
                 {
                     movement.homeZone = zone;
                     movement.startSquare = GetStartSquareForPlayer(i);
-                    movement.Owner = player; // 🛠 setăm Owner-ul pionului
+                    movement.Owner = player;
                 }
             }
 
@@ -102,6 +128,5 @@ public class GameLogicManager : MonoBehaviour
                 playerNameTexts[i].text = player.DisplayName;
             }
         }
-
     }
 }

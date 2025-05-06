@@ -1,12 +1,11 @@
-using Mirror;
 using UnityEngine;
 
-public class PawnMovement : NetworkBehaviour
+public class PawnMovement : MonoBehaviour
 {
     public Transform homeZone;
     public Transform startSquare;
-    [SyncVar] public bool isOnBoard = false;
-    [SyncVar] public NetworkGamePlayerLobby Owner; // 🛠 nou câmp!
+    public bool isOnBoard = false;
+    public LocalPlayer Owner; // Nou: jucator local asociat pionului
 
     public void MoveToStart()
     {
