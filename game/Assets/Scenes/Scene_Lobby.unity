@@ -1968,6 +1968,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 1
+  runInBackground: 1
+  headlessStartMode: 0
+  editorAutoStart: 0
+  sendRate: 60
+  offlineScene: 
+  onlineScene: Assets/Scenes/Scene_Lobby.unity
+  offlineSceneLoadDelay: 0
+  transport: {fileID: 825597900}
+  networkAddress: localhost
+  maxConnections: 4
+  disconnectInactiveConnections: 0
+  disconnectInactiveTimeout: 60
+  authenticator: {fileID: 0}
+  playerPrefab: {fileID: 7070245590777494687, guid: 2e335cd858237a249964e38e078112b1, type: 3}
+  autoCreatePlayer: 1
+  playerSpawnMethod: 0
+  spawnPrefabs:
+  - {fileID: 2612384636066809880, guid: 0f86365af682679458f67542be8dabea, type: 3}
+  - {fileID: 8531227447065785403, guid: 478a84a7e6efaaf49be4d4a7d20b036b, type: 3}
+  exceptionsDisconnect: 1
+  snapshotSettings:
+    bufferTimeMultiplier: 2
+    bufferLimit: 32
+    catchupNegativeThreshold: -1
+    catchupPositiveThreshold: 1
+    catchupSpeed: 0.019999999552965164
+    slowdownSpeed: 0.03999999910593033
+    driftEmaDuration: 1
+    dynamicAdjustment: 1
+    dynamicAdjustmentTolerance: 1
+    deliveryTimeEmaDuration: 2
+  evaluationMethod: 0
+  evaluationInterval: 3
+  timeInterpolationGui: 0
+  minPlayers: 2
+  menuScene: Assets/Scenes/Scene_Lobby.unity
+  roomPlayerPrefab: {fileID: 6666661668770149256, guid: 0a21868373d46664b90aef956c34a34d, type: 3}
+  gamePlayerPrefab: {fileID: 2183515982635935035, guid: bc240c87591cc7f4aa28e6d9c566f7c7, type: 3}
+--- !u!114 &825597900
   m_IgnoreLayout: 1
   m_MinWidth: -1
   m_MinHeight: -1
