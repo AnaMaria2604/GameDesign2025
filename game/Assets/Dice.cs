@@ -28,19 +28,100 @@ public class Dice : MonoBehaviour
         });
     }
 
-    private void MovePawnOutOfHome()
-    {
-        var pawns = FindObjectsOfType<PawnMovement>();
+    // private void MovePawnOutOfHome()
+    // {
+    //     var pawns = FindObjectsOfType<PawnMovement>();
 
-        foreach (var pawn in pawns)
+    //     foreach (var pawn in pawns)
+    //     {
+    //         if (!pawn.isOnBoard)
+    //         {
+    //             pawn.MoveToStart();
+    //             break;
+    //         }
+    //     }
+    // }
+
+//    private void MovePawnOutOfHome()
+// {
+//     var turnManager = FindObjectOfType<TurnManager>();
+//     if (turnManager == null)
+//     {
+//         UnityEngine.Debug.LogWarning("⚠ MovePawnOutOfHome: TurnManager not found.");
+//         return;
+//     }
+
+//     LocalPlayer currentPlayer = turnManager.GetCurrentPlayer();
+//     if (currentPlayer == null)
+//     {
+//         UnityEngine.Debug.LogWarning("⚠ MovePawnOutOfHome: Current player is null.");
+//         return;
+//     }
+
+//     UnityEngine.Debug.Log($"🔄 It's {currentPlayer.DisplayName}'s turn (CharacterIndex: {currentPlayer.CharacterIndex})");
+
+//     var pawns = FindObjectsOfType<PawnMovement>();
+
+//     foreach (var pawn in pawns)
+//     {
+//         if (pawn.Owner == null)
+//         {
+//             UnityEngine.Debug.Log("⚠ Found a pawn with null owner, skipping.");
+//             continue;
+//         }
+
+//         if (pawn.Owner.CharacterIndex == currentPlayer.CharacterIndex && !pawn.isOnBoard)
+//         {
+//             UnityEngine.Debug.Log($"✅ Moving pawn out for player {currentPlayer.DisplayName}");
+//             pawn.MoveToStart();
+//             return; // oprim după ce am mutat un pion
+//         }
+//     }
+
+//     UnityEngine.Debug.Log($"ℹ {currentPlayer.DisplayName} has no pawns to move out.");
+// }
+private void MovePawnOutOfHome()
+{
+    var turnManager = FindObjectOfType<TurnManager>();
+    if (turnManager == null)
+    {
+        Debug.LogWarning("⚠ MovePawnOutOfHome: TurnManager not found.");
+        return;
+    }
+
+    LocalPlayer currentPlayer = turnManager.GetCurrentPlayer();
+    if (currentPlayer == null)
+    {
+        Debug.LogWarning("⚠ MovePawnOutOfHome: Current player is null.");
+        return;
+    }
+
+    Debug.Log($"🔄 It's {currentPlayer.DisplayName}'s turn (CharacterIndex: {currentPlayer.CharacterIndex})");
+
+    var pawns = FindObjectsOfType<PawnMovement>();
+
+    foreach (var pawn in pawns)
+    {
+        if (pawn.Owner == null)
         {
-            if (!pawn.isOnBoard)
-            {
-                pawn.MoveToStart();
-                break;
-            }
+            Debug.Log("⚠ Found a pawn with null owner, skipping.");
+            continue;
+        }
+
+        // Comparam dupa CharacterIndex, nu dupa referinta
+        if (!pawn.isOnBoard && pawn.Owner != null &&
+            pawn.Owner.CharacterIndex == currentPlayer.CharacterIndex)
+        {
+            Debug.Log($"✅ Moving pawn out for player {currentPlayer.DisplayName} with index {pawn.Owner.CharacterIndex}");
+            pawn.MoveToStart();
+            return;
         }
     }
+
+    Debug.Log($"ℹ {currentPlayer.DisplayName} has no pawns to move out.");
+}
+
+
 
     private IEnumerator RollTheDice()
     {
@@ -54,7 +135,11 @@ public class Dice : MonoBehaviour
         }
 
         lastResult = randomDiceSide + 1;
-        MovePawnOutOfHome();
+        // if (lastResult == 6)
+        // { //TODO
+            MovePawnOutOfHome();
+        // }
+        
 
         TurnManager turnManager = FindObjectOfType<TurnManager>();
         if (turnManager != null)

@@ -20,10 +20,10 @@ public class TurnManager : MonoBehaviour
     {
         InitializeTurnOrder();
     }
-// public LocalPlayer GetCurrentPlayer()
-// {
-//     return players[currentTurnIndex];
-// }
+public LocalPlayer GetCurrentPlayer()
+{
+    return players[currentTurnIndex];
+}
 
 // public void ValidateNames()
 // {
@@ -67,32 +67,56 @@ public class TurnManager : MonoBehaviour
 //     currentTurnIndex = -1;
 //     NextTurn();
 // }
+// void InitializeTurnOrder()
+// {
+//     players.Clear();
+
+//     if (GameSettings.PlayerNames == null || GameSettings.PlayerNames.Count < GameSettings.NumberOfPlayers)
+//     {
+//         Debug.LogWarning("⚠ TurnManager: Player names list is missing or incomplete. Using fallback names.");
+//         for (int i = 0; i < GameSettings.NumberOfPlayers; i++)
+//         {
+//             players.Add(new LocalPlayer
+//             {
+//                 DisplayName = $"Player {i + 1}",
+//                 CharacterIndex = i
+//             });
+//         }
+//     }
+//     else
+//     {
+//         for (int i = 0; i < GameSettings.NumberOfPlayers; i++)
+//         {
+//             players.Add(new LocalPlayer
+//             {
+//                 DisplayName = GameSettings.PlayerNames[i],
+//                 CharacterIndex = i
+//             });
+//         }
+//     }
+
+//     if (globalDice == null)
+//     {
+//         globalDice = FindObjectOfType<Dice>();
+//     }
+
+//     if (players.Count == 0 || globalDice == null)
+//     {
+//         return;
+//     }
+
+//     currentTurnIndex = -1;
+//     NextTurn();
+// }
+
 void InitializeTurnOrder()
 {
-    players.Clear();
+    players = new List<LocalPlayer>(GameSettings.LocalPlayers);
 
-    if (GameSettings.PlayerNames == null || GameSettings.PlayerNames.Count < GameSettings.NumberOfPlayers)
+    if (players == null || players.Count == 0)
     {
-        Debug.LogWarning("⚠ TurnManager: Player names list is missing or incomplete. Using fallback names.");
-        for (int i = 0; i < GameSettings.NumberOfPlayers; i++)
-        {
-            players.Add(new LocalPlayer
-            {
-                DisplayName = $"Player {i + 1}",
-                CharacterIndex = i
-            });
-        }
-    }
-    else
-    {
-        for (int i = 0; i < GameSettings.NumberOfPlayers; i++)
-        {
-            players.Add(new LocalPlayer
-            {
-                DisplayName = GameSettings.PlayerNames[i],
-                CharacterIndex = i
-            });
-        }
+        Debug.LogError("⚠ TurnManager: No players found in GameSettings.LocalPlayers");
+        return;
     }
 
     if (globalDice == null)
@@ -100,14 +124,10 @@ void InitializeTurnOrder()
         globalDice = FindObjectOfType<Dice>();
     }
 
-    if (players.Count == 0 || globalDice == null)
-    {
-        return;
-    }
-
     currentTurnIndex = -1;
     NextTurn();
 }
+
 
 // public void NextTurn()
 // {
