@@ -20,7 +20,7 @@ Ideea pe care vom merge va fi urmatoarea(Screenshot-ul este din canva): ![image]
 
 ![image](https://github.com/user-attachments/assets/7db5ea00-6347-49eb-8b62-a4aa883916ef)
 
-# -----------------------------------------------------------------------------------------
+# -------------------------------------------------------------
 # UPDATE-noua varianta, luata de la 0:
 
 ## Am reluat jocul de la 0 deoarece au aparut constant probleme de sincronizare foarte mari, care nici nu au putut fi rezolvate.🙁
