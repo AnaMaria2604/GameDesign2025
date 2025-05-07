@@ -157,16 +157,40 @@ MonoBehaviour:
   - {fileID: 84264880}
   - {fileID: 116571623}
   - {fileID: 1709326622}
-  pawnSprites:
-  - {fileID: 21300000, guid: 285c40966aa2f9b499287acaf96ff319, type: 3}
-  - {fileID: 21300000, guid: 424c6dd9c86289b468d6f9110d4b39b0, type: 3}
-  - {fileID: 21300000, guid: 59aa7c55eb5e6f64b9040dce6aa3e9a2, type: 3}
-  - {fileID: 21300000, guid: b0215cfcdb69066489eb61b2c395d7ed, type: 3}
-  - {fileID: 21300000, guid: c7e9742d46f232b40ae5e53c6d746582, type: 3}
-  monsterSprites:
-  - {fileID: 21300000, guid: b1fd09c62145f8a4095098c4e35cae2c, type: 3}
-  - {fileID: 21300000, guid: 9f551b02cddd74f49bb87a60208002ab, type: 3}
-  - {fileID: 21300000, guid: 41336b8be4343104c814edcc799f22c4, type: 3}
+  normalVariantLists:
+  - baseSprite: {fileID: 21300000, guid: 7bc7297ce591398418ecefc2d8c67413, type: 3}
+    x2Sprite: {fileID: 21300000, guid: bbce5e5ad4eacb647b481a50cde93588, type: 3}
+    x3Sprite: {fileID: 21300000, guid: 4227c951bb724ab499992d04d5267d8e, type: 3}
+    x4Sprite: {fileID: 21300000, guid: 6fcaa6f428277fe429a68c0571543a38, type: 3}
+  - baseSprite: {fileID: 21300000, guid: 9b5734bd1b66652419d6bc35886db9ce, type: 3}
+    x2Sprite: {fileID: 21300000, guid: 108e7a03c65c4f14bb5d96005ccad7ae, type: 3}
+    x3Sprite: {fileID: 21300000, guid: 5222fc8af6e97fa40b2c6dab80167a91, type: 3}
+    x4Sprite: {fileID: 21300000, guid: 57ba540fe05e7d3499e978433991b4e2, type: 3}
+  - baseSprite: {fileID: 21300000, guid: d3b4c579fc6c11341802e1d6f334f5c0, type: 3}
+    x2Sprite: {fileID: 21300000, guid: 7ae8740b4fd98d54e8c14366ff82dfc2, type: 3}
+    x3Sprite: {fileID: 21300000, guid: f243ec77332559e4ea221f9b6f72739b, type: 3}
+    x4Sprite: {fileID: 21300000, guid: 5dd36fcf03577e4449ccc1428d2e7b34, type: 3}
+  - baseSprite: {fileID: 21300000, guid: ce57a649eb2781241b6a11b4079f1c3c, type: 3}
+    x2Sprite: {fileID: 21300000, guid: 8158d14e017394149af88d7c884bc10b, type: 3}
+    x3Sprite: {fileID: 21300000, guid: 083e45f41c6e62d4e922d67c9d5623ab, type: 3}
+    x4Sprite: {fileID: 21300000, guid: e4bc5e04d23695744b0c9e2689d1a011, type: 3}
+  - baseSprite: {fileID: 21300000, guid: 34803bb9012072a4f8751ba6e658a2da, type: 3}
+    x2Sprite: {fileID: 21300000, guid: 4fe4cf021aafd1b49880ed2ac86bd017, type: 3}
+    x3Sprite: {fileID: 21300000, guid: 7e6afde9b67ed564cb1dc0245ecea91a, type: 3}
+    x4Sprite: {fileID: 21300000, guid: 38fed59ded14a0242b8b900d1c059a0c, type: 3}
+  monsterVariantLists:
+  - baseSprite: {fileID: 21300000, guid: c5d5a19a1b1d93443957bcf2724053c2, type: 3}
+    x2Sprite: {fileID: 21300000, guid: 9382ebd65a6922247817e22f10bb259a, type: 3}
+    x3Sprite: {fileID: 21300000, guid: f802ecca0e1fd0b4f9c6384e247c9535, type: 3}
+    x4Sprite: {fileID: 21300000, guid: 05ef29f03bc40174d995e731ec4eb1ef, type: 3}
+  - baseSprite: {fileID: 21300000, guid: b1ab7162793f51843bf0c08e9aa8fe62, type: 3}
+    x2Sprite: {fileID: 21300000, guid: 521ae59ecd96fd649a3a65def9039ec9, type: 3}
+    x3Sprite: {fileID: 21300000, guid: 6354a92cc595eb14ebd673656a27b00b, type: 3}
+    x4Sprite: {fileID: 21300000, guid: 44e963df0527d8a41a57540358cf9ac2, type: 3}
+  - baseSprite: {fileID: 21300000, guid: 5d64ef2c0bfbcad4ea9d1dc8f1c138f8, type: 3}
+    x2Sprite: {fileID: 21300000, guid: 13e5e13df76e20843b9c5b8d85aa1296, type: 3}
+    x3Sprite: {fileID: 21300000, guid: cdbf342edf58a6643a5f9f4f2f46edf0, type: 3}
+    x4Sprite: {fileID: 21300000, guid: 402424a19b8619344bbf3ddecfc7f243, type: 3}
   dicePrefab: {fileID: 2612384636066809880, guid: 0f86365af682679458f67542be8dabea, type: 3}
   loadingCanvas: {fileID: 1580225298}
   gameCanvas: {fileID: 234766732}
@@ -175,8 +199,8 @@ MonoBehaviour:
   playerNameTexts:
   - {fileID: 498482189}
   - {fileID: 892052397}
-  - {fileID: 1852390647}
   - {fileID: 1919259236}
+  - {fileID: 1852390647}
 --- !u!4 &63381418
 Transform:
   m_ObjectHideFlags: 0
@@ -780,7 +804,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &234766733
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3769,7 +3793,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1580225299
 MonoBehaviour:
   m_ObjectHideFlags: 0
