@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+
 
 public class PawnMovement : MonoBehaviour
 {
@@ -8,21 +10,24 @@ public class PawnMovement : MonoBehaviour
     public LocalPlayer Owner; // Nou: jucator local asociat pionului
     public PawnDisplay display;
 
-
     public void MoveToStart()
-{
-    if (!isOnBoard)
     {
-        transform.position = startSquare.position;
-        isOnBoard = true;
+        if (!isOnBoard)
+        {
+            transform.position = startSquare.position;
+            isOnBoard = true;
 
+            // 🔧 Delay actualizarea sprite-urilor cu un frame
+            StartCoroutine(UpdateSpritesNextFrame());
+        }
+    }
+
+    private IEnumerator UpdateSpritesNextFrame()
+    {
+        yield return null; // așteaptă un frame
         GameLogicManager logic = FindObjectOfType<GameLogicManager>();
         logic?.UpdateAllPawnSprites();
     }
-}
-
-
-    
 
     public void UpdateSprite(int count, CharacterVariants variants)
     {
