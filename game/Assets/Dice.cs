@@ -42,86 +42,111 @@ public class Dice : MonoBehaviour
     //     }
     // }
 
-//    private void MovePawnOutOfHome()
-// {
-//     var turnManager = FindObjectOfType<TurnManager>();
-//     if (turnManager == null)
-//     {
-//         UnityEngine.Debug.LogWarning("⚠ MovePawnOutOfHome: TurnManager not found.");
-//         return;
-//     }
+    //    private void MovePawnOutOfHome()
+    // {
+    //     var turnManager = FindObjectOfType<TurnManager>();
+    //     if (turnManager == null)
+    //     {
+    //         UnityEngine.Debug.LogWarning("⚠ MovePawnOutOfHome: TurnManager not found.");
+    //         return;
+    //     }
 
-//     LocalPlayer currentPlayer = turnManager.GetCurrentPlayer();
-//     if (currentPlayer == null)
-//     {
-//         UnityEngine.Debug.LogWarning("⚠ MovePawnOutOfHome: Current player is null.");
-//         return;
-//     }
+    //     LocalPlayer currentPlayer = turnManager.GetCurrentPlayer();
+    //     if (currentPlayer == null)
+    //     {
+    //         UnityEngine.Debug.LogWarning("⚠ MovePawnOutOfHome: Current player is null.");
+    //         return;
+    //     }
 
-//     UnityEngine.Debug.Log($"🔄 It's {currentPlayer.DisplayName}'s turn (CharacterIndex: {currentPlayer.CharacterIndex})");
+    //     UnityEngine.Debug.Log($"🔄 It's {currentPlayer.DisplayName}'s turn (CharacterIndex: {currentPlayer.CharacterIndex})");
 
-//     var pawns = FindObjectsOfType<PawnMovement>();
+    //     var pawns = FindObjectsOfType<PawnMovement>();
 
-//     foreach (var pawn in pawns)
-//     {
-//         if (pawn.Owner == null)
-//         {
-//             UnityEngine.Debug.Log("⚠ Found a pawn with null owner, skipping.");
-//             continue;
-//         }
+    //     foreach (var pawn in pawns)
+    //     {
+    //         if (pawn.Owner == null)
+    //         {
+    //             UnityEngine.Debug.Log("⚠ Found a pawn with null owner, skipping.");
+    //             continue;
+    //         }
 
-//         if (pawn.Owner.CharacterIndex == currentPlayer.CharacterIndex && !pawn.isOnBoard)
-//         {
-//             UnityEngine.Debug.Log($"✅ Moving pawn out for player {currentPlayer.DisplayName}");
-//             pawn.MoveToStart();
-//             return; // oprim după ce am mutat un pion
-//         }
-//     }
+    //         if (pawn.Owner.CharacterIndex == currentPlayer.CharacterIndex && !pawn.isOnBoard)
+    //         {
+    //             UnityEngine.Debug.Log($"✅ Moving pawn out for player {currentPlayer.DisplayName}");
+    //             pawn.MoveToStart();
+    //             return; // oprim după ce am mutat un pion
+    //         }
+    //     }
 
-//     UnityEngine.Debug.Log($"ℹ {currentPlayer.DisplayName} has no pawns to move out.");
-// }
-private void MovePawnOutOfHome()
-{
-    var turnManager = FindObjectOfType<TurnManager>();
-    if (turnManager == null)
+    //     UnityEngine.Debug.Log($"ℹ {currentPlayer.DisplayName} has no pawns to move out.");
+    // }
+    private void MovePawnOutOfHome()
     {
-        Debug.LogWarning("⚠ MovePawnOutOfHome: TurnManager not found.");
-        return;
-    }
-
-    LocalPlayer currentPlayer = turnManager.GetCurrentPlayer();
-    if (currentPlayer == null)
-    {
-        Debug.LogWarning("⚠ MovePawnOutOfHome: Current player is null.");
-        return;
-    }
-
-    Debug.Log($"🔄 It's {currentPlayer.DisplayName}'s turn (CharacterIndex: {currentPlayer.CharacterIndex})");
-
-    var pawns = FindObjectsOfType<PawnMovement>();
-
-    foreach (var pawn in pawns)
-    {
-        if (pawn.Owner == null)
+        var turnManager = FindObjectOfType<TurnManager>();
+        if (turnManager == null)
         {
-            Debug.Log("⚠ Found a pawn with null owner, skipping.");
-            continue;
-        }
-
-        // Comparam dupa CharacterIndex, nu dupa referinta
-        if (!pawn.isOnBoard && pawn.Owner != null &&
-            pawn.Owner.CharacterIndex == currentPlayer.CharacterIndex)
-        {
-            Debug.Log($"✅ Moving pawn out for player {currentPlayer.DisplayName} with index {pawn.Owner.CharacterIndex}");
-            pawn.MoveToStart();
+            Debug.LogWarning("⚠ MovePawnOutOfHome: TurnManager not found.");
             return;
         }
+
+        LocalPlayer currentPlayer = turnManager.GetCurrentPlayer();
+        if (currentPlayer == null)
+        {
+            Debug.LogWarning("⚠ MovePawnOutOfHome: Current player is null.");
+            return;
+        }
+
+        Debug.Log($"🔄 It's {currentPlayer.DisplayName}'s turn (CharacterIndex: {currentPlayer.CharacterIndex})");
+
+        var pawns = FindObjectsOfType<PawnMovement>();
+
+        foreach (var pawn in pawns)
+        {
+            if (pawn.Owner == null)
+            {
+                Debug.Log("⚠ Found a pawn with null owner, skipping.");
+                continue;
+            }
+
+            // Comparam dupa CharacterIndex, nu dupa referinta
+            if (!pawn.isOnBoard && pawn.Owner != null &&
+                pawn.Owner.CharacterIndex == currentPlayer.CharacterIndex)
+            {
+                Debug.Log($"✅ Moving pawn out for player {currentPlayer.DisplayName} with index {pawn.Owner.CharacterIndex}");
+                pawn.MoveToStart();
+                return;
+            }
+        }
+
+        Debug.Log($"ℹ {currentPlayer.DisplayName} has no pawns to move out.");
     }
 
-    Debug.Log($"ℹ {currentPlayer.DisplayName} has no pawns to move out.");
-}
 
 
+    // private IEnumerator RollTheDice()
+    // {
+    //     int randomDiceSide = 0;
+
+    //     for (int i = 0; i < 20; i++)
+    //     {
+    //         randomDiceSide = Random.Range(0, diceSides.Length);
+    //         UpdateDiceSprite(randomDiceSide);
+    //         yield return new WaitForSeconds(0.05f);
+    //     }
+
+    //     lastResult = randomDiceSide + 1;
+    //     // if (lastResult == 6)
+    //     // { //TODO
+    //         MovePawnOutOfHome();
+    //     // }
+
+
+    //     TurnManager turnManager = FindObjectOfType<TurnManager>();
+    //     if (turnManager != null)
+    //     {
+    //         turnManager.NextTurn();
+    //     }
+    // }
 
     private IEnumerator RollTheDice()
     {
@@ -135,82 +160,113 @@ private void MovePawnOutOfHome()
         }
 
         lastResult = randomDiceSide + 1;
-        // if (lastResult == 6)
-        // { //TODO
-            MovePawnOutOfHome();
-        // }
-        
 
-        TurnManager turnManager = FindObjectOfType<TurnManager>();
-        if (turnManager != null)
+        var turnManager = FindObjectOfType<TurnManager>();
+        if (turnManager == null) yield break;
+
+        var currentPlayer = turnManager.GetCurrentPlayer();
+        var pawns = FindObjectsOfType<PawnMovement>();
+
+        if (lastResult == 6)
         {
-            turnManager.NextTurn();
+            foreach (var pawn in pawns)
+            {
+                if (pawn.Owner == null || pawn.Owner.CharacterIndex != currentPlayer.CharacterIndex) continue;
+
+                if (!pawn.isOnBoard)
+                {
+                    pawn.MoveToStart();
+                    yield return new WaitForSeconds(0.5f); // aștepți puțin
+                    turnManager.NextTurn(); // apoi treci la următorul jucător
+                    yield break;
+                }
+            }
         }
+        else
+        {
+            // mută primul pion găsit deja pe tablă
+            foreach (var pawn in pawns)
+            {
+                if (pawn.Owner == null || pawn.Owner.CharacterIndex != currentPlayer.CharacterIndex) continue;
+
+                if (pawn.isOnBoard)
+                {
+                    pawn.MoveForward(lastResult);
+                    break;
+                }
+            }
+        }
+
+        yield return new WaitForSeconds(0.5f);
+        turnManager.NextTurn();
     }
-// private IEnumerator RollTheDice()
-// {
-//     int randomDiceSide = 0;
 
-//     for (int i = 0; i < 20; i++)
-//     {
-//         randomDiceSide = Random.Range(0, diceSides.Length);
-//         UpdateDiceSprite(randomDiceSide);
-//         yield return new WaitForSeconds(0.05f);
-//     }
 
-//     lastResult = randomDiceSide + 1;
 
-//     // Move pawn logic here (if needed)
+    // private IEnumerator RollTheDice()
+    // {
+    //     int randomDiceSide = 0;
 
-//     // Blochează zarul imediat
-//     SetActive(false);
+    //     for (int i = 0; i < 20; i++)
+    //     {
+    //         randomDiceSide = Random.Range(0, diceSides.Length);
+    //         UpdateDiceSprite(randomDiceSide);
+    //         yield return new WaitForSeconds(0.05f);
+    //     }
 
-//     // Treci la următorul jucător după o mică pauză
-//     yield return new WaitForSeconds(0.5f);
-    
-//     TurnManager turnManager = FindObjectOfType<TurnManager>();
-//     if (turnManager != null)
-//     {
-//         turnManager.NextTurn();
-//     }
-// }
+    //     lastResult = randomDiceSide + 1;
 
-// private IEnumerator RollTheDice()
-// {
-//     int randomDiceSide = 0;
+    //     // Move pawn logic here (if needed)
 
-//     for (int i = 0; i < 20; i++)
-//     {
-//         randomDiceSide = Random.Range(0, diceSides.Length);
-//         UpdateDiceSprite(randomDiceSide);
-//         yield return new WaitForSeconds(0.05f);
-//     }
+    //     // Blochează zarul imediat
+    //     SetActive(false);
 
-//     lastResult = randomDiceSide + 1;
+    //     // Treci la următorul jucător după o mică pauză
+    //     yield return new WaitForSeconds(0.5f);
 
-//     // Blochează zarul imediat după rulare
-//     SetActive(false);
+    //     TurnManager turnManager = FindObjectOfType<TurnManager>();
+    //     if (turnManager != null)
+    //     {
+    //         turnManager.NextTurn();
+    //     }
+    // }
 
-//     // Mută un pion al jucătorului curent dacă există vreunul neactiv
-//     TurnManager turnManager = FindObjectOfType<TurnManager>();
-//     if (turnManager != null)
-//     {
-//         LocalPlayer currentPlayer = turnManager.GetCurrentPlayer();
-//         PawnMovement[] pawns = FindObjectsOfType<PawnMovement>();
+    // private IEnumerator RollTheDice()
+    // {
+    //     int randomDiceSide = 0;
 
-//         foreach (var pawn in pawns)
-//         {
-//             if (pawn.Owner == currentPlayer && !pawn.isOnBoard)
-//             {
-//                 pawn.MoveToStart();
-//                 break; // mutăm doar primul găsit
-//             }
-//         }
+    //     for (int i = 0; i < 20; i++)
+    //     {
+    //         randomDiceSide = Random.Range(0, diceSides.Length);
+    //         UpdateDiceSprite(randomDiceSide);
+    //         yield return new WaitForSeconds(0.05f);
+    //     }
 
-//         yield return new WaitForSeconds(0.5f);
-//         turnManager.NextTurn();
-//     }
-// }
+    //     lastResult = randomDiceSide + 1;
+
+    //     // Blochează zarul imediat după rulare
+    //     SetActive(false);
+
+    //     // Mută un pion al jucătorului curent dacă există vreunul neactiv
+    //     TurnManager turnManager = FindObjectOfType<TurnManager>();
+    //     if (turnManager != null)
+    //     {
+    //         LocalPlayer currentPlayer = turnManager.GetCurrentPlayer();
+    //         PawnMovement[] pawns = FindObjectsOfType<PawnMovement>();
+
+    //         foreach (var pawn in pawns)
+    //         {
+    //             if (pawn.Owner == currentPlayer && !pawn.isOnBoard)
+    //             {
+    //                 pawn.MoveToStart();
+    //                 break; // mutăm doar primul găsit
+    //             }
+    //         }
+
+    //         yield return new WaitForSeconds(0.5f);
+    //         turnManager.NextTurn();
+    //     }
+    // }
 
     private void UpdateDiceSprite(int spriteIndex)
     {
