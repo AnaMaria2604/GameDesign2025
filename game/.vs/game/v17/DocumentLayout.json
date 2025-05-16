@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\Asus\\Desktop\\GameDesign-nou-nou\\game\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Asus\\Desktop\\GameDesign-nou-nou\\game\\Assets\\Dice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Dice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Asus\\Desktop\\GameDesign-nou-nou\\game\\Assets\\Lobby\\Scripts\\UIFlowManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Lobby\\Scripts\\UIFlowManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Asus\\Desktop\\GameDesign-nou-nou\\game\\Assets\\TurnManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\TurnManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -13,10 +21,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Asus\\Desktop\\GameDesign-nou-nou\\game\\Assets\\Lobby\\Scripts\\PawnMovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Lobby\\Scripts\\PawnMovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Asus\\Desktop\\GameDesign-nou-nou\\game\\Assets\\Dice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Dice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ioana-Info\\Desktop\\GD2\\game\\Assets\\Lobby\\Scripts\\NetworkManagerLobby.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
@@ -52,20 +56,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "Dice.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\GameDesign-nou-nou\\game\\Assets\\Dice.cs",
               "RelativeDocumentMoniker": "Assets\\Dice.cs",
               "ToolTip": "C:\\Users\\Asus\\Desktop\\GameDesign-nou-nou\\game\\Assets\\Dice.cs",
               "RelativeToolTip": "Assets\\Dice.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAbAAAAAAAAAA==",
+              "ViewState": "AgIAAGAAAAAAAAAAAAAcwIMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-20T20:06:13.133Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",
@@ -73,7 +78,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
+              "Title": "UIFlowManager.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\GameDesign-nou-nou\\game\\Assets\\Lobby\\Scripts\\UIFlowManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Lobby\\Scripts\\UIFlowManager.cs",
+              "ToolTip": "C:\\Users\\Asus\\Desktop\\GameDesign-nou-nou\\game\\Assets\\Lobby\\Scripts\\UIFlowManager.cs",
+              "RelativeToolTip": "Assets\\Lobby\\Scripts\\UIFlowManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-16T00:25:20.499Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "PawnMovement.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\GameDesign-nou-nou\\game\\Assets\\Lobby\\Scripts\\PawnMovement.cs",
               "RelativeDocumentMoniker": "Assets\\Lobby\\Scripts\\PawnMovement.cs",
@@ -85,7 +103,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "TurnManager.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\GameDesign-nou-nou\\game\\Assets\\TurnManager.cs",
               "RelativeDocumentMoniker": "Assets\\TurnManager.cs",
@@ -93,12 +111,11 @@
               "RelativeToolTip": "Assets\\TurnManager.cs",
               "ViewState": "AgIAAIEAAAAAAAAAAAAcwJEAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-25T01:23:38.73Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-25T01:23:38.73Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "NetworkPawn.cs",
               "DocumentMoniker": "C:\\Users\\Ioana-Info\\Desktop\\GD2\\game\\Assets\\Lobby\\Scripts\\NetworkPawn.cs",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\Ioana-Info\\Desktop\\GD2\\game\\Assets\\Lobby\\Scripts\\NetworkPawn.cs",
@@ -110,7 +127,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "GameLogicManager.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\GameDesign-nou-nou\\game\\Assets\\Lobby\\Scripts\\GameLogicManager.cs",
               "RelativeDocumentMoniker": "Assets\\Lobby\\Scripts\\GameLogicManager.cs",
@@ -118,12 +135,11 @@
               "RelativeToolTip": "Assets\\Lobby\\Scripts\\GameLogicManager.cs",
               "ViewState": "AgIAABYAAAAAAAAAAAAMwCsAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-09T22:30:32.23Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-09T22:30:32.23Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "PlayerNameInput.cs",
               "DocumentMoniker": "C:\\Users\\Ioana-Info\\Desktop\\GD2\\game\\Assets\\Lobby\\Scripts\\PlayerNameInput.cs",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\Ioana-Info\\Desktop\\GD2\\game\\Assets\\Lobby\\Scripts\\PlayerNameInput.cs",
@@ -135,7 +151,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "NetworkRoomPlayerLobby.cs",
               "DocumentMoniker": "C:\\Users\\Ioana-Info\\Desktop\\GD2\\game\\Assets\\Lobby\\Scripts\\NetworkRoomPlayerLobby.cs",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\Ioana-Info\\Desktop\\GD2\\game\\Assets\\Lobby\\Scripts\\NetworkRoomPlayerLobby.cs",
@@ -147,7 +163,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "NetworkManagerLobby.cs",
               "DocumentMoniker": "C:\\Users\\Ioana-Info\\Desktop\\GD2\\game\\Assets\\Lobby\\Scripts\\NetworkManagerLobby.cs",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\Ioana-Info\\Desktop\\GD2\\game\\Assets\\Lobby\\Scripts\\NetworkManagerLobby.cs",
@@ -159,7 +175,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "NetworkGamePlayerLobby.cs",
               "DocumentMoniker": "C:\\Users\\Ioana-Info\\Desktop\\GD2\\game\\Assets\\Lobby\\Scripts\\NetworkGamePlayerLobby.cs",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\Ioana-Info\\Desktop\\GD2\\game\\Assets\\Lobby\\Scripts\\NetworkGamePlayerLobby.cs",
@@ -171,7 +187,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "PawnDisplay.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\GameDesign-nou-nou\\game\\Assets\\Lobby\\Scripts\\PawnDisplay.cs",
               "RelativeDocumentMoniker": "Assets\\Lobby\\Scripts\\PawnDisplay.cs",
@@ -183,7 +199,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "MainMenu.cs",
               "DocumentMoniker": "C:\\Users\\Asus\\Desktop\\GameDesign-nou-nou\\game\\Assets\\Lobby\\Scripts\\MainMenu.cs",
               "RelativeDocumentMoniker": "Assets\\Lobby\\Scripts\\MainMenu.cs",
@@ -195,7 +211,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "JoinLobbyMenu.cs",
               "DocumentMoniker": "C:\\Users\\Ioana-Info\\Desktop\\GD2\\game\\Assets\\Lobby\\Scripts\\JoinLobbyMenu.cs",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\Ioana-Info\\Desktop\\GD2\\game\\Assets\\Lobby\\Scripts\\JoinLobbyMenu.cs",

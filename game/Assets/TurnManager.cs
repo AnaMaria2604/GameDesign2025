@@ -25,89 +25,7 @@ public class TurnManager : MonoBehaviour
         return players[currentTurnIndex];
     }
 
-    // public void ValidateNames()
-    // {
-    //     bool hasAtLeastOneName = false;
 
-    //     for (int i = 0; i < GameSettings.NumberOfPlayers; i++)
-    //     {
-    //         if (!string.IsNullOrWhiteSpace(nameInputs[i].text))
-    //         {
-    //             hasAtLeastOneName = true;
-    //             break;
-    //         }
-    //     }
-
-    //     confirmButton.interactable = hasAtLeastOneName;
-    // }
-
-    //     void InitializeTurnOrder()
-    // {
-    //     players.Clear();
-
-    //     for (int i = 0; i < GameSettings.NumberOfPlayers; i++)
-    //     {
-    //         players.Add(new LocalPlayer
-    //         {
-    //             DisplayName = GameSettings.PlayerNames[i],
-    //             CharacterIndex = i
-    //         });
-    //     }
-
-    //     if (globalDice == null)
-    //     {
-    //         globalDice = FindObjectOfType<Dice>();
-    //     }
-
-    //     if (players.Count == 0 || globalDice == null)
-    //     {
-    //         return;
-    //     }
-
-    //     currentTurnIndex = -1;
-    //     NextTurn();
-    // }
-    // void InitializeTurnOrder()
-    // {
-    //     players.Clear();
-
-    //     if (GameSettings.PlayerNames == null || GameSettings.PlayerNames.Count < GameSettings.NumberOfPlayers)
-    //     {
-    //         Debug.LogWarning("⚠ TurnManager: Player names list is missing or incomplete. Using fallback names.");
-    //         for (int i = 0; i < GameSettings.NumberOfPlayers; i++)
-    //         {
-    //             players.Add(new LocalPlayer
-    //             {
-    //                 DisplayName = $"Player {i + 1}",
-    //                 CharacterIndex = i
-    //             });
-    //         }
-    //     }
-    //     else
-    //     {
-    //         for (int i = 0; i < GameSettings.NumberOfPlayers; i++)
-    //         {
-    //             players.Add(new LocalPlayer
-    //             {
-    //                 DisplayName = GameSettings.PlayerNames[i],
-    //                 CharacterIndex = i
-    //             });
-    //         }
-    //     }
-
-    //     if (globalDice == null)
-    //     {
-    //         globalDice = FindObjectOfType<Dice>();
-    //     }
-
-    //     if (players.Count == 0 || globalDice == null)
-    //     {
-    //         return;
-    //     }
-
-    //     currentTurnIndex = -1;
-    //     NextTurn();
-    // }
 
     void InitializeTurnOrder()
     {
@@ -129,17 +47,6 @@ public class TurnManager : MonoBehaviour
     }
 
 
-    // public void NextTurn()
-    // {
-    //     if (players.Count == 0 || globalDice == null) return;
-
-    //     currentTurnIndex = (currentTurnIndex + 1) % players.Count;
-    //     var nextPlayer = players[currentTurnIndex];
-
-    //     globalDice.SetActive(true); // ← activăm zarul DOAR pentru jucătorul curent
-    //     UpdateTurnLabel(nextPlayer.DisplayName);
-    // }
-
     public void NextTurn()
     {
         if (players.Count == 0 || globalDice == null) return;
@@ -149,6 +56,14 @@ public class TurnManager : MonoBehaviour
 
         globalDice.SetActive(true);
         UpdateTurnLabel(nextPlayer.DisplayName);
+
+        if (globalDice != null)
+        {
+            globalDice.ResetSixCounter();
+            globalDice.SetActive(true);
+        }
+
+
     }
 
     void UpdateTurnLabel(string displayName)
