@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Linq;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 public class Dice : MonoBehaviour
 {
@@ -35,18 +37,18 @@ public class Dice : MonoBehaviour
         var turnManager = FindObjectOfType<TurnManager>();
         if (turnManager == null)
         {
-            Debug.LogWarning("⚠ MovePawnOutOfHome: TurnManager not found.");
+            UnityEngine.Debug.LogWarning("⚠ MovePawnOutOfHome: TurnManager not found.");
             return;
         }
 
         LocalPlayer currentPlayer = turnManager.GetCurrentPlayer();
         if (currentPlayer == null)
         {
-            Debug.LogWarning("⚠ MovePawnOutOfHome: Current player is null.");
+            UnityEngine.Debug.LogWarning("⚠ MovePawnOutOfHome: Current player is null.");
             return;
         }
 
-        Debug.Log($"🔄 It's {currentPlayer.DisplayName}'s turn (CharacterIndex: {currentPlayer.CharacterIndex})");
+        UnityEngine.Debug.Log($"🔄 It's {currentPlayer.DisplayName}'s turn (CharacterIndex: {currentPlayer.CharacterIndex})");
 
         var pawns = FindObjectsOfType<PawnMovement>();
 
@@ -54,7 +56,7 @@ public class Dice : MonoBehaviour
         {
             if (pawn.Owner == null)
             {
-                Debug.Log("⚠ Found a pawn with null owner, skipping.");
+                UnityEngine.Debug.Log("⚠ Found a pawn with null owner, skipping.");
                 continue;
             }
 
@@ -62,13 +64,13 @@ public class Dice : MonoBehaviour
             if (!pawn.isOnBoard && pawn.Owner != null &&
                 pawn.Owner.CharacterIndex == currentPlayer.CharacterIndex)
             {
-                Debug.Log($"✅ Moving pawn out for player {currentPlayer.DisplayName} with index {pawn.Owner.CharacterIndex}");
+                UnityEngine.Debug.Log($"✅ Moving pawn out for player {currentPlayer.DisplayName} with index {pawn.Owner.CharacterIndex}");
                 pawn.MoveToStart();
                 return;
             }
         }
 
-        Debug.Log($"ℹ {currentPlayer.DisplayName} has no pawns to move out.");
+        UnityEngine.Debug.Log($"ℹ {currentPlayer.DisplayName} has no pawns to move out.");
     }
 
 
@@ -203,7 +205,7 @@ public class Dice : MonoBehaviour
         {
             if (consecutiveSixes >= 3)
             {
-                Debug.Log("🚫 Ai dat 6 de 3 ori în aceeași tură. Pierzi rândul.");
+                UnityEngine.Debug.Log("🚫 Ai dat 6 de 3 ori în aceeași tură. Pierzi rândul.");
                 consecutiveSixes = 0;
                 turnManager.NextTurn();
                 yield break;
@@ -214,27 +216,21 @@ public class Dice : MonoBehaviour
                 .ToList();
 
             var inHome = playerPawns.Where(p => !p.isOnBoard).ToList();
+            var onBoard = playerPawns.Where(p => p.isOnBoard).ToList();
 
-            if (inHome.Count > 0)
+            if (inHome.Count == 0 && onBoard.Count == 0)
             {
-                var pawnToRelease = inHome[Random.Range(0, inHome.Count)];
-                pawnToRelease.MoveToStart();
-                yield return new WaitForSeconds(0.5f);
-            }
-            else
-            {
-                var onBoard = playerPawns.Where(p => p.isOnBoard).ToList();
-                if (onBoard.Count > 0)
-                {
-                    var pawnToMove = onBoard[Random.Range(0, onBoard.Count)];
-                    pawnToMove.MoveForward(6);
-                    yield return new WaitUntil(() => !pawnToMove.IsMoving);
-                }
+                UnityEngine.Debug.Log("ℹ Niciun pion disponibil pentru mutare.");
+                turnManager.NextTurn();
+                yield break;
             }
 
-            SetActive(true); // permite altă aruncare dacă nu s-a ajuns la 3×6
+            yield return StartCoroutine(WaitForPlayerChoice(currentPlayer, inHome, onBoard));
+
+            SetActive(true); // Permite o nouă aruncare
             yield break;
         }
+
         else
         {
             var candidatePawns = pawns
@@ -251,18 +247,6 @@ public class Dice : MonoBehaviour
                 yield break;
             }
 
-            var grouped = candidatePawns
-                .GroupBy(p => p.transform.position)
-                .OrderByDescending(g => g.Count())
-                .First();
-
-            //PawnMovement selectedPawn = grouped
-            //    .OrderBy(p => Random.value)
-            //    .First();
-
-            ////selectedPawn.MoveForward(lastResult);
-            ////yield return new WaitUntil(() => !selectedPawn.IsMoving);
-            //selectedPawn.EnableManualMove(lastResult);
 
             foreach (var pawn in candidatePawns)
             {
@@ -275,6 +259,53 @@ public class Dice : MonoBehaviour
         consecutiveSixes = 0;
         //turnManager.NextTurn();
     }
+
+    private IEnumerator WaitForPlayerChoice(LocalPlayer currentPlayer, List<PawnMovement> inHome, List<PawnMovement> onBoard)
+    {
+        bool choiceMade = false;
+
+        foreach (var pawn in inHome)
+        {
+            pawn.display.SetBlinking(true);
+            pawn.display.clickableButton.onClick.AddListener(() =>
+            {
+                pawn.MoveToStart();
+                choiceMade = true;
+                ClearAllPawnChoices();
+            });
+        }
+
+        foreach (var pawn in onBoard)
+        {
+            pawn.display.SetBlinking(true);
+            pawn.display.clickableButton.onClick.AddListener(() =>
+            {
+                pawn.MoveForward(6);
+                StartCoroutine(WaitUntilNotMoving(pawn, () => choiceMade = true));
+                ClearAllPawnChoices();
+            });
+        }
+
+        yield return new WaitUntil(() => choiceMade);
+    }
+
+    private void ClearAllPawnChoices()
+    {
+        var pawns = FindObjectsOfType<PawnMovement>();
+        foreach (var pawn in pawns)
+        {
+            pawn.display.SetBlinking(false);
+            pawn.display.clickableButton.onClick.RemoveAllListeners();
+        }
+    }
+
+    private IEnumerator WaitUntilNotMoving(PawnMovement pawn, System.Action callback)
+    {
+        yield return new WaitUntil(() => !pawn.IsMoving);
+        callback?.Invoke();
+    }
+
+
     private void UpdateDiceSprite(int spriteIndex)
     {
         if (image != null && diceSides != null && spriteIndex < diceSides.Length)
