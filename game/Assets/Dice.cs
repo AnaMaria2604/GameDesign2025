@@ -256,16 +256,24 @@ public class Dice : MonoBehaviour
                 .OrderByDescending(g => g.Count())
                 .First();
 
-            PawnMovement selectedPawn = grouped
-                .OrderBy(p => Random.value)
-                .First();
+            //PawnMovement selectedPawn = grouped
+            //    .OrderBy(p => Random.value)
+            //    .First();
 
-            selectedPawn.MoveForward(lastResult);
-            yield return new WaitUntil(() => !selectedPawn.IsMoving);
+            ////selectedPawn.MoveForward(lastResult);
+            ////yield return new WaitUntil(() => !selectedPawn.IsMoving);
+            //selectedPawn.EnableManualMove(lastResult);
+
+            foreach (var pawn in candidatePawns)
+            {
+                pawn.EnableManualMove(lastResult);
+            }
+
+
         }
 
         consecutiveSixes = 0;
-        turnManager.NextTurn();
+        //turnManager.NextTurn();
     }
     private void UpdateDiceSprite(int spriteIndex)
     {

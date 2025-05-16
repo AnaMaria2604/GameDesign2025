@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 
@@ -11,6 +12,50 @@ public class PawnMovement : MonoBehaviour
     public PawnDisplay display;
     public int pathIndex = -1;
     public bool IsMoving { get; private set; } = false;
+    private int pendingMoveSteps = 0;
+
+    public void EnableManualMove(int steps)
+    {
+        pendingMoveSteps = steps;
+        display.SetBlinking(true);
+        display.GetComponent<Button>().onClick.AddListener(OnPawnClicked);
+    }
+
+    //private void OnPawnClicked()
+    //{
+    //    display.SetBlinking(false);
+    //    display.GetComponent<Button>().onClick.RemoveListener(OnPawnClicked);
+    //    MoveForward(pendingMoveSteps);
+
+    //    TurnManager tm = FindObjectOfType<TurnManager>();
+    //    if (tm != null)
+    //        tm.NextTurn();
+    //}
+
+    private void OnPawnClicked()
+    {
+        // Dezactivează interactivitatea tuturor pionilor jucătorului
+        var allPawns = FindObjectsOfType<PawnMovement>();
+        foreach (var p in allPawns)
+        {
+            if (p != this)
+            {
+                p.display.SetBlinking(false);
+                p.display.clickableButton.onClick.RemoveAllListeners();
+            }
+        }
+
+        // Acest pion se mută
+        display.SetBlinking(false);
+        display.clickableButton.onClick.RemoveListener(OnPawnClicked);
+        MoveForward(pendingMoveSteps);
+
+        TurnManager tm = FindObjectOfType<TurnManager>();
+        if (tm != null)
+            tm.NextTurn();
+    }
+
+
 
     // public void MoveForward(int steps)
     // {
