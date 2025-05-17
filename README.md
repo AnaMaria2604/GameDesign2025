@@ -43,4 +43,25 @@ Ideea pe care vom merge va fi urmatoarea(Screenshot-ul este din canva): ![image]
 ## Video demonstrativ:
 https://github.com/user-attachments/assets/94a11edc-3805-4a3a-b096-cc080a6dab9f
 
+# -------------------------------------------------------------
+# UPDATE-17 mai
+
+## Implementarea regulilor precum scoaterea pionoilor din casa doar cand se obtine 6 + runda bonus pentru respectivul jucator:
+Un jucator poate da cu zarul succesiv de maxim 3 ori, dupa care se trece la tura urmatorului jucator, chiar daca s-a obtinut din nou 6. 
+![image](https://github.com/user-attachments/assets/6b4a9042-5bc0-4404-b3e5-aa48e00fcc12)
+
+## Avansarea pionilor (cu animatie de miscare) pe tabla de joc:
+![image](https://github.com/user-attachments/assets/d2862600-40b0-40ea-93a7-c5f8a246e16e)
+
+## Posibilitatea jucatorului de a alege cu ce pion doreste a inainta pe tabla de joc (cu animatie care indica ce pioni pot fi selectati pentru mutare) 
+Daca exista mai multi pioni identici in aceeasi zona (marcati cu x2, x3,x4), jucatorul poate avansa doar cu unul dintre ei.
+![image](https://github.com/user-attachments/assets/3b2172f4-5a46-4997-8a8c-4de96f637409)
+
+
+
+
+
+
+
+
 
