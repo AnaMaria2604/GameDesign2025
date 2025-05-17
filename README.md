@@ -58,10 +58,7 @@ Daca exista mai multi pioni identici in aceeasi zona (marcati cu x2, x3,x4), juc
 ![image](https://github.com/user-attachments/assets/3b2172f4-5a46-4997-8a8c-4de96f637409)
 
 
-
-
-
-
-
+## Update->video
+https://github.com/user-attachments/assets/5208b63c-0efd-4bf1-be87-81313c3a926a
 
 
