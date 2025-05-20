@@ -19,7 +19,11 @@ public class PawnMovement : MonoBehaviour
     private int finalPathIndex = 0;
     public bool hasFinished = false;
     public Vector3 originalHomePosition; // salvează poziția inițială
-  
+
+    [SerializeField]
+    public List<Transform> safeZones;
+
+
 
     //private void OnPawnClicked()
     //{
@@ -49,7 +53,7 @@ public class PawnMovement : MonoBehaviour
 
     public void EnableManualMove(int steps)
     {
-        if (!CanMove(steps)) return; 
+        if (!CanMove(steps)) return;
 
         pendingMoveSteps = steps;
         display.SetBlinking(true);
@@ -93,41 +97,37 @@ public class PawnMovement : MonoBehaviour
     }
 
 
+    // private void CheckAndEatOpponent()
+    // {
+    //     Vector3 currentPosition = transform.position;
+    //     string[] safeZones = { "Start_TopLeft", "Start_TopRight", "Start_BottomRight", "Start_BottomLeft" };
 
+    //     // dacă e pe o zonă sigură, nu facem nimic
+    //     if (System.Array.Exists(safeZones, safe => safe == gameObject.name))
+    //         return;
 
+    //     var allPawns = FindObjectsOfType<PawnMovement>();
+    //     var pawnsOnSameSpot = new List<PawnMovement>();
 
+    //     foreach (var pawn in allPawns)
+    //     {
+    //         if (pawn == this || !pawn.isOnBoard) continue;
 
-    private void CheckAndEatOpponent()
-    {
-        Vector3 currentPosition = transform.position;
-        string[] safeZones = { "Start_TopLeft", "Start_TopRight", "Start_BottomRight", "Start_BottomLeft" };
+    //         if (Vector3.Distance(pawn.transform.position, currentPosition) < 0.01f)
+    //         {
+    //             pawnsOnSameSpot.Add(pawn);
+    //         }
+    //     }
 
-        // dacă e pe o zonă sigură, nu facem nimic
-        if (System.Array.Exists(safeZones, safe => safe == gameObject.name))
-            return;
+    //     var opponents = pawnsOnSameSpot.FindAll(p => p.Owner.CharacterIndex != this.Owner.CharacterIndex);
 
-        var allPawns = FindObjectsOfType<PawnMovement>();
-        var pawnsOnSameSpot = new List<PawnMovement>();
-
-        foreach (var pawn in allPawns)
-        {
-            if (pawn == this || !pawn.isOnBoard) continue;
-
-            if (Vector3.Distance(pawn.transform.position, currentPosition) < 0.01f)
-            {
-                pawnsOnSameSpot.Add(pawn);
-            }
-        }
-
-        var opponents = pawnsOnSameSpot.FindAll(p => p.Owner.CharacterIndex != this.Owner.CharacterIndex);
-
-        // dacă este exact un oponent, îl "mâncăm"
-        if (opponents.Count == 1 && pawnsOnSameSpot.Count == 1)
-        {
-            var eaten = opponents[0];
-            eaten.SendToHome();
-        }
-    }
+    //     // dacă este exact un oponent, îl "mâncăm"
+    //     if (opponents.Count == 1 && pawnsOnSameSpot.Count == 1)
+    //     {
+    //         var eaten = opponents[0];
+    //         eaten.SendToHome();
+    //     }
+    // }
 
 
 
@@ -168,6 +168,75 @@ public class PawnMovement : MonoBehaviour
     //         StartCoroutine(UpdateSpritesNextFrame());
     //     }
     // }
+
+    // private void CheckAndEatOpponent()
+    // {
+    //     Vector3 currentPosition = transform.position;
+
+    //     // Dacă pionul este pe o zonă safe, ieșim
+    //     // foreach (GameObject zone in safeZones)
+    //     // {
+    //     //     if (zone != null && Vector3.Distance(currentPosition, zone.transform.position) < 0.01f)
+    //     //         return;
+    //     // }
+    //     foreach (Transform safeZone in safeZones)
+    //     {
+    //         if (Vector3.Distance(currentPosition, safeZone.position) < 0.01f)
+    //             return;
+    //     }
+    //     var allPawns = FindObjectsOfType<PawnMovement>();
+    //     var pawnsOnSameSpot = new List<PawnMovement>();
+
+    //     foreach (var pawn in allPawns)
+    //     {
+    //         if (pawn == this || !pawn.isOnBoard) continue;
+
+    //         if (Vector3.Distance(pawn.transform.position, currentPosition) < 0.01f)
+    //         {
+    //             pawnsOnSameSpot.Add(pawn);
+    //         }
+    //     }
+
+    //     var opponents = pawnsOnSameSpot.FindAll(p => p.Owner.CharacterIndex != this.Owner.CharacterIndex);
+
+    //     if (opponents.Count == 1 && pawnsOnSameSpot.Count == 1)
+    //     {
+    //         var eaten = opponents[0];
+    //         eaten.SendToHome();
+    //     }
+    // }
+
+    private void CheckAndEatOpponent()
+    {
+        Vector3 currentPosition = transform.position;
+
+        foreach (Transform zone in safeZones)
+        {
+            if (Vector3.Distance(currentPosition, zone.position) < 0.01f)
+                return;
+        }
+
+        var allPawns = FindObjectsOfType<PawnMovement>();
+        var pawnsOnSameSpot = new List<PawnMovement>();
+
+        foreach (var pawn in allPawns)
+        {
+            if (pawn == this || !pawn.isOnBoard) continue;
+
+            if (Vector3.Distance(pawn.transform.position, currentPosition) < 0.01f)
+            {
+                pawnsOnSameSpot.Add(pawn);
+            }
+        }
+
+        var opponents = pawnsOnSameSpot.FindAll(p => p.Owner.CharacterIndex != this.Owner.CharacterIndex);
+
+        if (opponents.Count == 1 && pawnsOnSameSpot.Count == 1)
+        {
+            var eaten = opponents[0];
+            eaten.SendToHome();
+        }
+    }
 
     public void MoveForward(int steps)
     {

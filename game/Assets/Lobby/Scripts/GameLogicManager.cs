@@ -132,6 +132,14 @@ public class GameLogicManager : MonoBehaviour
                     movement.startSquare = GetStartSquareForPlayer(i);
                     movement.Owner = player;
                     movement.display = display;
+                    movement.safeZones = new List<Transform>
+                    {
+                        GameObject.Find("Start_TopLeft").transform,
+                        GameObject.Find("Start_TopRight").transform,
+                        GameObject.Find("Start_BottomLeft").transform,
+                        GameObject.Find("Start_BottomRight").transform
+                    };
+
                 }
 
                 Debug.Log($"🧩 Pawn created for player {player.DisplayName} with CharacterIndex {player.CharacterIndex}");
