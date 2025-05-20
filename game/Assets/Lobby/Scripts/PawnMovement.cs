@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 
 public class PawnMovement : MonoBehaviour
@@ -17,7 +18,8 @@ public class PawnMovement : MonoBehaviour
     private bool onFinalPath = false;
     private int finalPathIndex = 0;
     public bool hasFinished = false;
-
+    public Vector3 originalHomePosition; // salvează poziția inițială
+  
 
     //private void OnPawnClicked()
     //{
@@ -75,6 +77,56 @@ public class PawnMovement : MonoBehaviour
         TurnManager tm = FindObjectOfType<TurnManager>();
         if (tm != null)
             tm.NextTurn();
+    }
+    public void SendToHome()
+    {
+        isOnBoard = false;
+        hasFinished = false;
+        onFinalPath = false;
+        finalPathIndex = 0;
+        pathIndex = -1;
+
+        transform.SetParent(homeZone);
+        transform.position = originalHomePosition; // ← REVINE LA LOCUL LUI ORIGINAL
+
+        StartCoroutine(UpdateSpritesNextFrame());
+    }
+
+
+
+
+
+
+    private void CheckAndEatOpponent()
+    {
+        Vector3 currentPosition = transform.position;
+        string[] safeZones = { "Start_TopLeft", "Start_TopRight", "Start_BottomRight", "Start_BottomLeft" };
+
+        // dacă e pe o zonă sigură, nu facem nimic
+        if (System.Array.Exists(safeZones, safe => safe == gameObject.name))
+            return;
+
+        var allPawns = FindObjectsOfType<PawnMovement>();
+        var pawnsOnSameSpot = new List<PawnMovement>();
+
+        foreach (var pawn in allPawns)
+        {
+            if (pawn == this || !pawn.isOnBoard) continue;
+
+            if (Vector3.Distance(pawn.transform.position, currentPosition) < 0.01f)
+            {
+                pawnsOnSameSpot.Add(pawn);
+            }
+        }
+
+        var opponents = pawnsOnSameSpot.FindAll(p => p.Owner.CharacterIndex != this.Owner.CharacterIndex);
+
+        // dacă este exact un oponent, îl "mâncăm"
+        if (opponents.Count == 1 && pawnsOnSameSpot.Count == 1)
+        {
+            var eaten = opponents[0];
+            eaten.SendToHome();
+        }
     }
 
 
@@ -146,13 +198,11 @@ public class PawnMovement : MonoBehaviour
                     if (finalPathIndex == finalPath.Count - 1)
                     {
                         hasFinished = true;
-                       
-                        break; // oprim mutarea
+                        break;
                     }
                 }
                 else
                 {
-                   
                     break;
                 }
             }
@@ -163,18 +213,18 @@ public class PawnMovement : MonoBehaviour
                 yield return StartCoroutine(MoveToPosition(nextSquare.position));
                 pathIndex = nextIndex;
 
-                // Intrare pe drumul final dacă e pe pătratul de start propriu
                 if (nextSquare.name == startSquare.name)
                 {
                     onFinalPath = true;
                     finalPathIndex = -1; // va deveni 0 la următorul pas
-                    
                 }
             }
         }
 
         StartCoroutine(UpdateSpritesNextFrame());
         IsMoving = false;
+
+        CheckAndEatOpponent(); // ← verificăm doar după ce am terminat mutarea completă
     }
 
 
@@ -216,18 +266,22 @@ public class PawnMovement : MonoBehaviour
     {
         if (!isOnBoard)
         {
+            // salvează poziția înainte de mutare
+            originalHomePosition = transform.position;
+
             transform.position = startSquare.position;
             isOnBoard = true;
 
             var square = startSquare.GetComponent<BoardSquare>();
             if (square != null)
             {
-                pathIndex = square.index; // ← esențial!
+                pathIndex = square.index;
             }
 
             StartCoroutine(UpdateSpritesNextFrame());
         }
     }
+
 
 
     private IEnumerator UpdateSpritesNextFrame()

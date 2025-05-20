@@ -397,6 +397,13 @@ MonoBehaviour:
   isOnBoard: 0
   display: {fileID: 0}
   pathIndex: -1
+  hasFinished: 0
+  originalHomePosition: {x: 0, y: 0, z: 0}
+  safeZones:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &7088749834905128138
 MonoBehaviour:
   m_ObjectHideFlags: 0
