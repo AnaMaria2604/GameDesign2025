@@ -247,11 +247,24 @@ public class Dice : MonoBehaviour
                 yield break;
             }
 
+            bool hasValidMove = false;
 
             foreach (var pawn in candidatePawns)
             {
-                pawn.EnableManualMove(lastResult);
+                if (pawn.CanMove(lastResult))
+                {
+                    hasValidMove = true;
+                    pawn.EnableManualMove(lastResult);
+                }
             }
+
+            if (!hasValidMove)
+            {
+                yield return new WaitForSeconds(0.5f);
+                turnManager.NextTurn();
+                yield break;
+            }
+
 
 
         }
@@ -277,17 +290,22 @@ public class Dice : MonoBehaviour
 
         foreach (var pawn in onBoard)
         {
-            pawn.display.SetBlinking(true);
-            pawn.display.clickableButton.onClick.AddListener(() =>
+            if (pawn.CanMove(6))
             {
-                pawn.MoveForward(6);
-                StartCoroutine(WaitUntilNotMoving(pawn, () => choiceMade = true));
-                ClearAllPawnChoices();
-            });
+                pawn.display.SetBlinking(true);
+                pawn.display.clickableButton.onClick.AddListener(() =>
+                {
+                    pawn.MoveForward(6);
+                    StartCoroutine(WaitUntilNotMoving(pawn, () => choiceMade = true));
+                    ClearAllPawnChoices();
+                });
+            }
         }
 
         yield return new WaitUntil(() => choiceMade);
     }
+
+
 
     private void ClearAllPawnChoices()
     {

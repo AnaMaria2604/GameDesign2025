@@ -1568,6 +1568,26 @@ MonoBehaviour:
   - {fileID: 1531934397}
   - {fileID: 955582700}
   - {fileID: 286710387}
+  finalPath_TopLeft:
+  - {fileID: 1218929196}
+  - {fileID: 2140984561}
+  - {fileID: 287269865}
+  - {fileID: 908502159}
+  finalPath_TopRight:
+  - {fileID: 2059543265}
+  - {fileID: 1674168495}
+  - {fileID: 1199275892}
+  - {fileID: 908502159}
+  finalPath_BottomRight:
+  - {fileID: 688369162}
+  - {fileID: 1442389380}
+  - {fileID: 438458268}
+  - {fileID: 908502159}
+  finalPath_BottomLeft:
+  - {fileID: 162263390}
+  - {fileID: 882571386}
+  - {fileID: 1440711346}
+  - {fileID: 908502159}
 --- !u!4 &434649575
 Transform:
   m_ObjectHideFlags: 0

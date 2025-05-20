@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Diagnostics;
 
 
 public class PawnMovement : MonoBehaviour
@@ -13,13 +14,10 @@ public class PawnMovement : MonoBehaviour
     public int pathIndex = -1;
     public bool IsMoving { get; private set; } = false;
     private int pendingMoveSteps = 0;
+    private bool onFinalPath = false;
+    private int finalPathIndex = 0;
+    public bool hasFinished = false;
 
-    public void EnableManualMove(int steps)
-    {
-        pendingMoveSteps = steps;
-        display.SetBlinking(true);
-        display.GetComponent<Button>().onClick.AddListener(OnPawnClicked);
-    }
 
     //private void OnPawnClicked()
     //{
@@ -31,6 +29,30 @@ public class PawnMovement : MonoBehaviour
     //    if (tm != null)
     //        tm.NextTurn();
     //}
+
+    public bool CanMove(int steps)
+    {
+        if (!isOnBoard || IsMoving || hasFinished)
+            return false;
+
+        if (onFinalPath)
+        {
+            var finalPath = PathManager.Instance.GetFinalPathForPlayer(GetPlayerIndex());
+            int remaining = finalPath.Count - 1 - finalPathIndex;
+            return steps <= remaining;
+        }
+
+        return true; // pe traseul comun, orice mutare e permisă
+    }
+
+    public void EnableManualMove(int steps)
+    {
+        if (!CanMove(steps)) return; 
+
+        pendingMoveSteps = steps;
+        display.SetBlinking(true);
+        display.GetComponent<Button>().onClick.AddListener(OnPawnClicked);
+    }
 
     private void OnPawnClicked()
     {
@@ -108,27 +130,59 @@ public class PawnMovement : MonoBehaviour
         var path = PathManager.Instance;
         if (path == null) yield break;
 
-        int current = pathIndex;
-        int pathLength = path.GetPathLength();
-
-        for (int i = 1; i <= steps; i++)
+        for (int i = 0; i < steps; i++)
         {
-            int nextIndex = (current + i) % pathLength;
-            Transform nextSquare = path.GetSquareAt(nextIndex);
-            if (nextSquare != null)
+            if (onFinalPath)
             {
-                // animația: te duci cu o mică viteză către poziția pătrățelei
+                var finalPath = path.GetFinalPathForPlayer(GetPlayerIndex());
+                if (finalPath == null) break;
+
+                if (finalPathIndex + 1 < finalPath.Count)
+                {
+                    finalPathIndex++;
+                    Transform next = finalPath[finalPathIndex];
+                    yield return StartCoroutine(MoveToPosition(next.position));
+
+                    if (finalPathIndex == finalPath.Count - 1)
+                    {
+                        hasFinished = true;
+                       
+                        break; // oprim mutarea
+                    }
+                }
+                else
+                {
+                   
+                    break;
+                }
+            }
+            else
+            {
+                int nextIndex = (pathIndex + 1) % path.GetPathLength();
+                Transform nextSquare = path.GetSquareAt(nextIndex);
                 yield return StartCoroutine(MoveToPosition(nextSquare.position));
+                pathIndex = nextIndex;
+
+                // Intrare pe drumul final dacă e pe pătratul de start propriu
+                if (nextSquare.name == startSquare.name)
+                {
+                    onFinalPath = true;
+                    finalPathIndex = -1; // va deveni 0 la următorul pas
+                    
+                }
             }
         }
 
-        pathIndex = (current + steps) % pathLength;
-
-        // actualizează sprite după mutare
         StartCoroutine(UpdateSpritesNextFrame());
         IsMoving = false;
-
     }
+
+
+    private int GetPlayerIndex()
+    {
+        return GameSettings.LocalPlayers.IndexOf(Owner);
+    }
+
 
     // private IEnumerator MoveToPosition(Vector3 target)
     // {
