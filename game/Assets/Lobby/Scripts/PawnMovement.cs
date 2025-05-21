@@ -293,7 +293,7 @@ public class PawnMovement : MonoBehaviour
         StartCoroutine(UpdateSpritesNextFrame());
         IsMoving = false;
 
-        CheckAndEatOpponent(); // ← verificăm doar după ce am terminat mutarea completă
+        //TODO CheckAndEatOpponent(); // ← verificăm doar după ce am terminat mutarea completă
     }
 
 

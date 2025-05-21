@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
+
 
 [System.Serializable]
 public class CharacterVariants
@@ -37,6 +39,43 @@ public class GameLogicManager : MonoBehaviour
         SetupLocalPlayers();
         StartCoroutine(ShowGameBoardAfterDelay());
     }
+
+    // private void ArrangePawnsInCircle(Vector3 center, List<PawnMovement> pawns)
+    // {
+    //     float radius = 0.2f;
+    //     float angleStep = 360f / pawns.Count;
+
+    //     for (int i = 0; i < pawns.Count; i++)
+    //     {
+    //         float angle = i * angleStep * Mathf.Deg2Rad;
+    //         Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
+    //         pawns[i].transform.position = center + offset;
+    //         pawns[i].transform.localScale = Vector3.one * 0.6f; // Micșorare
+    //     }
+    // }
+    private void ArrangePawnsInGrid(Vector3 center, List<PawnMovement> pawns)
+    {
+        int count = pawns.Count;
+
+        float spacing = 40f; // 🔥 Distanță foarte mare între pionii diferiți
+        float totalWidth = (count - 1) * spacing;
+
+        // 📍 Începem de la stânga și aliniem pe axa X
+        Vector3 startPos = center - new Vector3(totalWidth / 2f, 0f, 0f);
+
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 offset = new Vector3(i * spacing, 0f, 0f); // doar pe X
+            Vector3 newPos = startPos + offset;
+
+            pawns[i].transform.position = newPos;
+            pawns[i].transform.localScale = Vector3.one * 0.6f; // micșorat
+
+            Debug.Log($"⬛ Pion {i} poziționat la {newPos}");
+        }
+    }
+
+
 
     private void SetupLocalPlayers()
     {
@@ -215,5 +254,49 @@ public class GameLogicManager : MonoBehaviour
                 }
             }
         }
+        // foreach (var group in grouped)
+        // {
+        //     List<PawnMovement> pawnsAtSamePosition = group.Value;
+        //     var distinctOwners = new HashSet<int>(pawnsAtSamePosition.Select(p => p.Owner.CharacterIndex));
+
+        //     if (distinctOwners.Count > 1)
+        //     {
+        //         ArrangePawnsInCircle(group.Key, pawnsAtSamePosition);
+        //     }
+        //     else
+        //     {
+        //         foreach (var pawn in pawnsAtSamePosition)
+        //         {
+        //             pawn.transform.position = group.Key; // Reset poziția
+        //             pawn.transform.localScale = Vector3.one; // Reset scalarea
+        //         }
+        //     }
+        // }
+        foreach (var group in grouped)
+        {
+            List<PawnMovement> pawnsAtSamePosition = group.Value;
+
+            // ✅ Detectează câți jucători diferiți sunt în acel grup
+            var distinctOwners = new HashSet<int>(pawnsAtSamePosition.Select(p => p.Owner.CharacterIndex));
+
+            if (distinctOwners.Count > 1)
+            {
+                // 🧩 Sunt pioni de la jucători diferiți → aplicăm aranjarea circulară și micșorare
+                UnityEngine.Debug.Log($"🔵 Sunt {distinctOwners.Count} jucători diferiți pe aceeași pătrățică la poziția {group.Key}");
+                ArrangePawnsInGrid(group.Key, pawnsAtSamePosition);
+            }
+            else
+            {
+                // ♻️ Toți pionii sunt ai aceluiași jucător → păstrează dimensiunea normală și poziția centrală
+                foreach (var pawn in pawnsAtSamePosition)
+                {
+                    pawn.transform.position = group.Key;
+                    pawn.transform.localScale = Vector3.one; // dimensiune normală
+                }
+            }
+        }
+
+
+
     }
 }
