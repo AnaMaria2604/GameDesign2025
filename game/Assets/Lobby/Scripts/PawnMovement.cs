@@ -216,6 +216,12 @@ public class PawnMovement : MonoBehaviour
                 return;
         }
 
+        GameLogicManager logic = FindObjectOfType<GameLogicManager>();
+        if (logic != null && logic.temporarySafePositions.Contains(transform.position))
+        {
+            return; // Este un safe zone temporar, nu "mâncăm"
+        }
+
         var allPawns = FindObjectsOfType<PawnMovement>();
         var pawnsOnSameSpot = new List<PawnMovement>();
 

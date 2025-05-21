@@ -39,6 +39,9 @@ public class GameLogicManager : MonoBehaviour
 
     public bool gameEnded = false; // jocul s-a încheiat
 
+    public HashSet<Vector3> temporarySafePositions = new HashSet<Vector3>();
+
+
 
 
     void Start()
@@ -285,7 +288,7 @@ public class GameLogicManager : MonoBehaviour
         }
     }
 
-    public void UpdateAllPawnSprites()
+    /*public void UpdateAllPawnSprites()
     {
         var pawns = FindObjectsOfType<PawnMovement>();
         Dictionary<Vector3, List<PawnMovement>> grouped = new Dictionary<Vector3, List<PawnMovement>>();
@@ -315,11 +318,39 @@ public class GameLogicManager : MonoBehaviour
                 byType[id].Add(pawn);
             }
 
+            // foreach (var kvp in byType)
+            // {
+            //     int characterIndex = kvp.Key;
+            //     List<PawnMovement> sameTypePawns = kvp.Value;
+
+            //     CharacterVariants variants = null;
+
+            //     if (characterIndex >= 0 && characterIndex < normalVariantLists.Count)
+            //         variants = normalVariantLists[characterIndex];
+            //     else if (characterIndex < 0 && -characterIndex - 1 < monsterVariantLists.Count)
+            //         variants = monsterVariantLists[-characterIndex - 1];
+
+            //     if (variants == null) continue;
+
+            //     foreach (var pawn in sameTypePawns)
+            //     {
+            //         pawn.UpdateSprite(sameTypePawns.Count, variants);
+            //     }
+            // }
+            temporarySafePositions.Clear(); // Resetăm la fiecare update
+
             foreach (var kvp in byType)
             {
                 int characterIndex = kvp.Key;
                 List<PawnMovement> sameTypePawns = kvp.Value;
 
+                if (sameTypePawns.Count >= 2)
+                {
+                    // 📍 Toți sunt în aceeași poziție
+                    Vector3 safePosition = sameTypePawns[0].transform.position;
+                    safePosition.z = 0; // asigurăm că z nu contează
+                    temporarySafePositions.Add(safePosition);
+                }
                 CharacterVariants variants = null;
 
                 if (characterIndex >= 0 && characterIndex < normalVariantLists.Count)
@@ -334,6 +365,7 @@ public class GameLogicManager : MonoBehaviour
                     pawn.UpdateSprite(sameTypePawns.Count, variants);
                 }
             }
+
         }
         // foreach (var group in grouped)
         // {
@@ -353,31 +385,224 @@ public class GameLogicManager : MonoBehaviour
         //         }
         //     }
         // }
+        // foreach (var group in grouped)
+        // {
+        //     List<PawnMovement> pawnsAtSamePosition = group.Value;
+
+        //     // ✅ Detectează câți jucători diferiți sunt în acel grup
+        //     var distinctOwners = new HashSet<int>(pawnsAtSamePosition.Select(p => p.Owner.CharacterIndex));
+
+        //     if (distinctOwners.Count > 1)
+        //     {
+        //         // 🧩 Sunt pioni de la jucători diferiți → aplicăm aranjarea circulară și micșorare
+        //         UnityEngine.Debug.Log($"🔵 Sunt {distinctOwners.Count} jucători diferiți pe aceeași pătrățică la poziția {group.Key}");
+        //         ArrangePawnsInGrid(group.Key, pawnsAtSamePosition);
+        //     }
+        //     else
+        //     {
+        //         // ♻️ Toți pionii sunt ai aceluiași jucător → păstrează dimensiunea normală și poziția centrală
+        //         foreach (var pawn in pawnsAtSamePosition)
+        //         {
+        //             pawn.transform.position = group.Key;
+        //             pawn.transform.localScale = Vector3.one; // dimensiune normală
+        //         }
+        //     }
+        // }
+        // foreach (var group in grouped)
+        // {
+        //     List<PawnMovement> pawnsAtSamePosition = group.Value;
+
+        //     var byOwner = pawnsAtSamePosition.GroupBy(p => p.Owner.CharacterIndex);
+
+        //     // Dacă există mai mulți jucători pe aceeași pătrățică → grid
+        //     if (byOwner.Count() > 1)
+        //     {
+        //         ArrangePawnsInGrid(group.Key, pawnsAtSamePosition);
+        //     }
+        //     else
+        //     {
+        //         // ✅ Toți pionii sunt ai aceluiași jucător — păstrează UN pion vizual
+        //         var ownerGroup = byOwner.First();
+        //         var mainPawn = ownerGroup.First();
+
+        //         mainPawn.transform.position = group.Key;
+        //         mainPawn.transform.localScale = Vector3.one;
+
+        //         // 🔥 Ascunde restul pionilor din același grup (doar vizual!)
+        //         foreach (var pawn in ownerGroup.Skip(1))
+        //         {
+        //             pawn.transform.position = mainPawn.transform.position;
+        //             pawn.transform.localScale = Vector3.zero; // ascuns vizual
+        //         }
+        //     }
+        // }
+
         foreach (var group in grouped)
         {
             List<PawnMovement> pawnsAtSamePosition = group.Value;
 
-            // ✅ Detectează câți jucători diferiți sunt în acel grup
-            var distinctOwners = new HashSet<int>(pawnsAtSamePosition.Select(p => p.Owner.CharacterIndex));
+            // Grupăm pionii după jucător (CharacterIndex)
+            var byOwner = pawnsAtSamePosition
+                .GroupBy(p => p.Owner.CharacterIndex)
+                .ToDictionary(g => g.Key, g => g.ToList());
 
-            if (distinctOwners.Count > 1)
+            // Poziția centrală
+            Vector3 center = group.Key;
+
+            // Dacă avem mai mulți jucători → grid cu un pion vizibil per jucător
+            if (byOwner.Keys.Count > 1)
             {
-                // 🧩 Sunt pioni de la jucători diferiți → aplicăm aranjarea circulară și micșorare
-                UnityEngine.Debug.Log($"🔵 Sunt {distinctOwners.Count} jucători diferiți pe aceeași pătrățică la poziția {group.Key}");
-                ArrangePawnsInGrid(group.Key, pawnsAtSamePosition);
+                List<PawnMovement> compactView = new List<PawnMovement>();
+
+                foreach (var kvp in byOwner)
+                {
+                    int ownerId = kvp.Key;
+                    List<PawnMovement> pawnsOfPlayer = kvp.Value;
+
+                    // Păstrăm doar primul pion ca reprezentant vizual
+                    PawnMovement representative = pawnsOfPlayer[0];
+
+                    CharacterVariants variants = null;
+                    if (ownerId >= 0 && ownerId < normalVariantLists.Count)
+                        variants = normalVariantLists[ownerId];
+                    else if (ownerId < 0 && -ownerId - 1 < monsterVariantLists.Count)
+                        variants = monsterVariantLists[-ownerId - 1];
+
+                    representative.UpdateSprite(pawnsOfPlayer.Count, variants);
+                    compactView.Add(representative);
+
+                    // Ascundem restul
+                    foreach (var pawn in pawnsOfPlayer.Skip(1))
+                    {
+                        pawn.transform.localScale = Vector3.zero;
+                    }
+                }
+
+                // Aranjăm doar reprezentanții în grid
+                ArrangePawnsInGrid(center, compactView);
             }
             else
             {
-                // ♻️ Toți pionii sunt ai aceluiași jucător → păstrează dimensiunea normală și poziția centrală
-                foreach (var pawn in pawnsAtSamePosition)
+                // Doar un jucător pe pătrățică
+                var kvp = byOwner.First();
+                List<PawnMovement> playerPawns = kvp.Value;
+                PawnMovement representative = playerPawns[0];
+
+                CharacterVariants variants = null;
+                int id = kvp.Key;
+
+                if (id >= 0 && id < normalVariantLists.Count)
+                    variants = normalVariantLists[id];
+                else if (id < 0 && -id - 1 < monsterVariantLists.Count)
+                    variants = monsterVariantLists[-id - 1];
+
+                representative.UpdateSprite(pawns.Count, variants);
+                representative.transform.position = center;
+                representative.transform.localScale = Vector3.one;
+
+                foreach (var pawn in pawns.Skip(1))
                 {
-                    pawn.transform.position = group.Key;
-                    pawn.transform.localScale = Vector3.one; // dimensiune normală
+                    pawn.transform.position = center;
+                    pawn.transform.localScale = Vector3.zero;
                 }
             }
         }
 
 
 
+    }*/
+    public void UpdateAllPawnSprites()
+    {
+        var pawns = FindObjectsOfType<PawnMovement>();
+        Dictionary<Vector3, List<PawnMovement>> grouped = new Dictionary<Vector3, List<PawnMovement>>();
+        temporarySafePositions.Clear(); // resetăm safe zone-urile temporare
+
+        // Grupăm pionii după poziție
+        foreach (var pawn in pawns)
+        {
+            Vector3 pos = pawn.transform.position;
+            pos.z = 0;
+
+            if (!grouped.ContainsKey(pos))
+                grouped[pos] = new List<PawnMovement>();
+
+            grouped[pos].Add(pawn);
+        }
+
+        foreach (var group in grouped)
+        {
+            Vector3 center = group.Key;
+            List<PawnMovement> pawnsAtSamePosition = group.Value;
+
+            // Grupăm pionii după jucător
+            var byOwner = pawnsAtSamePosition
+                .GroupBy(p => p.Owner.CharacterIndex)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            // Safe zone temporar dacă un jucător are ≥ 2 pioni
+            foreach (var kvp in byOwner)
+            {
+                if (kvp.Value.Count >= 2)
+                {
+                    temporarySafePositions.Add(center);
+                    break;
+                }
+            }
+
+            // 🔁 Dacă sunt mai mulți jucători → afișăm câte un pion pentru fiecare
+            if (byOwner.Count > 1)
+            {
+                List<PawnMovement> compactView = new List<PawnMovement>();
+
+                foreach (var kvp in byOwner)
+                {
+                    int ownerId = kvp.Key;
+                    List<PawnMovement> playerPawns = kvp.Value;
+                    PawnMovement representative = playerPawns[0];
+
+                    CharacterVariants variants = null;
+                    if (ownerId >= 0 && ownerId < normalVariantLists.Count)
+                        variants = normalVariantLists[ownerId];
+                    else if (ownerId < 0 && -ownerId - 1 < monsterVariantLists.Count)
+                        variants = monsterVariantLists[-ownerId - 1];
+
+                    representative.UpdateSprite(playerPawns.Count, variants);
+                    compactView.Add(representative);
+
+                    foreach (var pawn in playerPawns.Skip(1))
+                    {
+                        pawn.transform.localScale = Vector3.zero;
+                    }
+                }
+
+                ArrangePawnsInGrid(center, compactView); // ← toți rămân mici
+            }
+
+            else
+            {
+                // Doar un jucător pe pătrățică → un pion vizibil cu sprite updatat
+                var kvp = byOwner.First();
+                int ownerId = kvp.Key;
+                List<PawnMovement> playerPawns = kvp.Value;
+                PawnMovement representative = playerPawns[0];
+
+                CharacterVariants variants = null;
+                if (ownerId >= 0 && ownerId < normalVariantLists.Count)
+                    variants = normalVariantLists[ownerId];
+                else if (ownerId < 0 && -ownerId - 1 < monsterVariantLists.Count)
+                    variants = monsterVariantLists[-ownerId - 1];
+
+                representative.UpdateSprite(playerPawns.Count, variants);
+                representative.transform.position = center;
+                representative.transform.localScale = Vector3.one;
+
+                foreach (var pawn in playerPawns.Skip(1))
+                {
+                    pawn.transform.position = center;
+                    pawn.transform.localScale = Vector3.zero;
+                }
+            }
+        }
     }
+
 }
