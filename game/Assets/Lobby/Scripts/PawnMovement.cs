@@ -25,17 +25,6 @@ public class PawnMovement : MonoBehaviour
 
 
 
-    //private void OnPawnClicked()
-    //{
-    //    display.SetBlinking(false);
-    //    display.GetComponent<Button>().onClick.RemoveListener(OnPawnClicked);
-    //    MoveForward(pendingMoveSteps);
-
-    //    TurnManager tm = FindObjectOfType<TurnManager>();
-    //    if (tm != null)
-    //        tm.NextTurn();
-    //}
-
     public bool CanMove(int steps)
     {
         if (!isOnBoard || IsMoving || hasFinished)
@@ -95,116 +84,6 @@ public class PawnMovement : MonoBehaviour
 
         StartCoroutine(UpdateSpritesNextFrame());
     }
-
-
-    // private void CheckAndEatOpponent()
-    // {
-    //     Vector3 currentPosition = transform.position;
-    //     string[] safeZones = { "Start_TopLeft", "Start_TopRight", "Start_BottomRight", "Start_BottomLeft" };
-
-    //     // dacă e pe o zonă sigură, nu facem nimic
-    //     if (System.Array.Exists(safeZones, safe => safe == gameObject.name))
-    //         return;
-
-    //     var allPawns = FindObjectsOfType<PawnMovement>();
-    //     var pawnsOnSameSpot = new List<PawnMovement>();
-
-    //     foreach (var pawn in allPawns)
-    //     {
-    //         if (pawn == this || !pawn.isOnBoard) continue;
-
-    //         if (Vector3.Distance(pawn.transform.position, currentPosition) < 0.01f)
-    //         {
-    //             pawnsOnSameSpot.Add(pawn);
-    //         }
-    //     }
-
-    //     var opponents = pawnsOnSameSpot.FindAll(p => p.Owner.CharacterIndex != this.Owner.CharacterIndex);
-
-    //     // dacă este exact un oponent, îl "mâncăm"
-    //     if (opponents.Count == 1 && pawnsOnSameSpot.Count == 1)
-    //     {
-    //         var eaten = opponents[0];
-    //         eaten.SendToHome();
-    //     }
-    // }
-
-
-
-    // public void MoveForward(int steps)
-    // {
-    //     if (!isOnBoard) return;
-
-    //     // Găsim pătrățica pe care se află pionul
-    //     var allSquares = FindObjectsOfType<BoardSquare>();
-    //     BoardSquare currentSquare = null;
-    //     float closestDist = float.MaxValue;
-
-    //     foreach (var square in allSquares)
-    //     {
-    //         float dist = Vector3.Distance(transform.position, square.transform.position);
-    //         if (dist < closestDist)
-    //         {
-    //             closestDist = dist;
-    //             currentSquare = square;
-    //         }
-    //     }
-
-    //     if (currentSquare == null)
-    //     {
-    //         Debug.LogWarning("❌ Nu am găsit pătrățica curentă.");
-    //         return;
-    //     }
-
-    //     int currentIndex = currentSquare.index;
-    //     int newIndex = (currentIndex + steps) % PathManager.Instance.GetPathLength();
-
-    //     Transform nextSquare = PathManager.Instance.GetSquareAt(newIndex);
-    //     if (nextSquare != null)
-    //     {
-    //         transform.position = nextSquare.position;
-    //         pathIndex = newIndex;
-
-    //         StartCoroutine(UpdateSpritesNextFrame());
-    //     }
-    // }
-
-    // private void CheckAndEatOpponent()
-    // {
-    //     Vector3 currentPosition = transform.position;
-
-    //     // Dacă pionul este pe o zonă safe, ieșim
-    //     // foreach (GameObject zone in safeZones)
-    //     // {
-    //     //     if (zone != null && Vector3.Distance(currentPosition, zone.transform.position) < 0.01f)
-    //     //         return;
-    //     // }
-    //     foreach (Transform safeZone in safeZones)
-    //     {
-    //         if (Vector3.Distance(currentPosition, safeZone.position) < 0.01f)
-    //             return;
-    //     }
-    //     var allPawns = FindObjectsOfType<PawnMovement>();
-    //     var pawnsOnSameSpot = new List<PawnMovement>();
-
-    //     foreach (var pawn in allPawns)
-    //     {
-    //         if (pawn == this || !pawn.isOnBoard) continue;
-
-    //         if (Vector3.Distance(pawn.transform.position, currentPosition) < 0.01f)
-    //         {
-    //             pawnsOnSameSpot.Add(pawn);
-    //         }
-    //     }
-
-    //     var opponents = pawnsOnSameSpot.FindAll(p => p.Owner.CharacterIndex != this.Owner.CharacterIndex);
-
-    //     if (opponents.Count == 1 && pawnsOnSameSpot.Count == 1)
-    //     {
-    //         var eaten = opponents[0];
-    //         eaten.SendToHome();
-    //     }
-    // }
 
     private void CheckAndEatOpponent()
     {
@@ -270,18 +149,7 @@ public class PawnMovement : MonoBehaviour
                     Transform next = finalPath[finalPathIndex];
                     yield return StartCoroutine(MoveToPosition(next.position));
 
-                    // if (finalPathIndex == finalPath.Count - 1)
-                    // {
-                    //     hasFinished = true;
-                    //     break;
-                    // }
-                    // if (finalPathIndex == finalPath.Count - 1)
-                    // {
-                    //     hasFinished = true;
-                    //     GameLogicManager logic = FindObjectOfType<GameLogicManager>();
-                    //     logic?.CheckWinCondition(); // Adaugă această linie
-                    //     break;
-                    // }
+                   
                     if (finalPathIndex == finalPath.Count - 1)
                     {
                         hasFinished = true;
@@ -333,18 +201,6 @@ public class PawnMovement : MonoBehaviour
     }
 
 
-    // private IEnumerator MoveToPosition(Vector3 target)
-    // {
-    //     float speed = 5f;
-    //     while (Vector3.Distance(transform.position, target) > 0.01f)
-    //     {
-    //         transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
-    //         yield return null;
-    //     }
-
-    //     transform.position = target;
-    //     yield return new WaitForSeconds(0.1f); // mică pauză între pași
-    // }
     private IEnumerator MoveToPosition(Vector3 target)
     {
         float duration = 0.4f; // timp total per pătrățică (super rapid)

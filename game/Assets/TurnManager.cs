@@ -47,25 +47,6 @@ public class TurnManager : MonoBehaviour
     }
 
 
-    // public void NextTurn()
-    // {
-    //     if (players.Count == 0 || globalDice == null) return;
-    //     UnityEngine.Debug.Log(players.Count);
-    //     currentTurnIndex = (currentTurnIndex + 1) % players.Count;
-    //     var nextPlayer = players[currentTurnIndex];
-
-    //     globalDice.SetActive(true);
-    //     UpdateTurnLabel(nextPlayer.DisplayName);
-
-    //     if (globalDice != null)
-    //     {
-    //         globalDice.ResetSixCounter();
-    //         globalDice.SetActive(true);
-    //     }
-
-
-    // }
-
     public void NextTurn()
     {
         GameLogicManager logic = FindObjectOfType<GameLogicManager>();

@@ -74,109 +74,6 @@ public class Dice : MonoBehaviour
     }
 
 
-    //DO NOT DELETE IT!!!!!!!!!!!!!! este codul de inainte de a adauga optiunea de a da 6 de 3 ori
-    // private IEnumerator RollTheDice()
-    // {
-    //     int randomDiceSide = 0;
-
-    //     for (int i = 0; i < 20; i++)
-    //     {
-    //         randomDiceSide = Random.Range(0, diceSides.Length);
-    //         UpdateDiceSprite(randomDiceSide);
-    //         yield return new WaitForSeconds(0.05f);
-    //     }
-
-    //     lastResult = randomDiceSide + 1;
-
-    //     if (lastResult == 6)
-    //         consecutiveSixes++;
-    //     else
-    //         consecutiveSixes = 0; // reset dacă nu e 6
-
-    //     TurnManager turnManager = FindObjectOfType<TurnManager>();
-    //     if (turnManager == null) yield break;
-
-    //     LocalPlayer currentPlayer = turnManager.GetCurrentPlayer();
-    //     PawnMovement[] pawns = FindObjectsOfType<PawnMovement>();
-
-
-    //     if (lastResult == 6)
-    //     {
-    //         var playerPawns = pawns
-    //             .Where(p => p.Owner != null && p.Owner.CharacterIndex == currentPlayer.CharacterIndex)
-    //             .ToList();
-
-    //         // Verificăm dacă există cel puțin un pion în casă
-    //         var inHome = playerPawns.Where(p => !p.isOnBoard).ToList();
-
-    //         if (inHome.Count > 0)
-    //         {
-    //             // Scoatem unul random
-    //             var pawnToRelease = inHome[Random.Range(0, inHome.Count)];
-    //             pawnToRelease.MoveToStart();
-    //             yield return new WaitForSeconds(0.5f);
-    //         }
-    //         else
-    //         {
-    //             // Toți sunt scoși → alegem unul random de pe tablă
-    //             var onBoard = playerPawns.Where(p => p.isOnBoard).ToList();
-    //             if (onBoard.Count > 0)
-    //             {
-    //                 var pawnToMove = onBoard[Random.Range(0, onBoard.Count)];
-    //                 pawnToMove.MoveForward(6);
-    //                 yield return new WaitUntil(() => !pawnToMove.IsMoving);
-    //             }
-    //         }
-
-    //         if (consecutiveRolls < 3)
-    //         {
-    //             SetActive(true); // încă ai voie să mai arunci
-    //         }
-    //         else
-    //         {
-    //             turnManager.NextTurn();
-    //         }
-    //         yield break;
-    //     }
-
-    //     else
-    //     {
-    //         var candidatePawns = pawns
-    //             .Where(p => p.Owner != null &&
-    //                         p.Owner.CharacterIndex == currentPlayer.CharacterIndex &&
-    //                         p.isOnBoard)
-    //             .ToList();
-
-    //         // Dacă nu are niciun pion pe tablă, nu facem nimic
-    //         if (candidatePawns.Count == 0)
-    //         {
-    //             yield return new WaitForSeconds(0.5f);
-    //             turnManager.NextTurn();
-    //             yield break;
-    //         }
-
-    //         // Grupăm pionii după poziția exactă
-    //         var grouped = candidatePawns
-    //             .GroupBy(p => p.transform.position)
-    //             .OrderByDescending(g => g.Count()) // cele mai multe suprapuneri
-    //             .First(); // luăm primul grup cu cei mai mulți pioni
-
-    //         // Alegem unul random din acel grup
-    //         PawnMovement selectedPawn = grouped
-    //             .OrderBy(p => Random.value)
-    //             .First();
-
-    //         // Îl mutăm
-    //         selectedPawn.MoveForward(lastResult);
-    //         yield return new WaitUntil(() => !selectedPawn.IsMoving);
-
-    //     }
-
-    //     turnManager.NextTurn();
-    // }
-
-
-    //JOS E CODUL PT A ARUNCA 6 DE MAXIM DE 3 ORI PE TURA
     private IEnumerator RollTheDice()
     {
         GameLogicManager logic = FindObjectOfType<GameLogicManager>();
@@ -210,9 +107,9 @@ public class Dice : MonoBehaviour
 
         if (lastResult == 6)
         {
-            if (consecutiveSixes >= 3)
+            if (consecutiveSixes >= 4)
             {
-                UnityEngine.Debug.Log("🚫 Ai dat 6 de 3 ori în aceeași tură. Pierzi rândul.");
+                UnityEngine.Debug.Log(" Ai dat 6 de 3 ori în aceeași tură. Pierzi rândul.");
                 consecutiveSixes = 0;
                 turnManager.NextTurn();
                 yield break;
@@ -277,7 +174,6 @@ public class Dice : MonoBehaviour
         }
 
         consecutiveSixes = 0;
-        //turnManager.NextTurn();
     }
 
     private IEnumerator WaitForPlayerChoice(LocalPlayer currentPlayer, List<PawnMovement> inHome, List<PawnMovement> onBoard)

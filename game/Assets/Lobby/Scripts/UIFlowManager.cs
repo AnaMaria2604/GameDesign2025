@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
-using System.Text.RegularExpressions; // adaugă sus
+using System.Text.RegularExpressions; 
 
 public class UIFlowManager : MonoBehaviour
 {
@@ -31,38 +31,7 @@ public class UIFlowManager : MonoBehaviour
         panelLandingPage.SetActive(true);
     }
 
-    // public void SelectNumberOfPlayers(int count)
-    // {
-    //     GameSettings.NumberOfPlayers = count;
-    //     nameInputs[i].characterLimit = 6;
-
-    //     panelLandingPage.SetActive(false);
-    //     panelNameInput.SetActive(true);
-
-    //     for (int i = 0; i < nameInputBlocks.Length; i++)
-    //     {
-    //         bool isActive = i < count;
-
-    //         // Activează sau dezactivează inputul
-    //         nameInputs[i].interactable = isActive;
-    //         if (!isActive)
-    //         {
-    //             nameInputs[i].text = ""; // Șterge textul din câmpurile inactive
-    //         }
-
-    //         // Aplică stil vizual pe blocul complet (label + input)
-    //         var group = nameInputBlocks[i].GetComponent<CanvasGroup>();
-    //         if (group == null)
-    //         {
-    //             group = nameInputBlocks[i].AddComponent<CanvasGroup>();
-    //         }
-
-    //         group.alpha = isActive ? 1f : 0.25f;
-    //         group.interactable = isActive;
-    //         group.blocksRaycasts = isActive;
-    //     }
-    // }
-
+    
     public void SelectNumberOfPlayers(int count)
     {
         GameSettings.NumberOfPlayers = count;
