@@ -264,11 +264,35 @@ public class PawnMovement : MonoBehaviour
                     Transform next = finalPath[finalPathIndex];
                     yield return StartCoroutine(MoveToPosition(next.position));
 
+                    // if (finalPathIndex == finalPath.Count - 1)
+                    // {
+                    //     hasFinished = true;
+                    //     break;
+                    // }
+                    // if (finalPathIndex == finalPath.Count - 1)
+                    // {
+                    //     hasFinished = true;
+                    //     GameLogicManager logic = FindObjectOfType<GameLogicManager>();
+                    //     logic?.CheckWinCondition(); // Adaugă această linie
+                    //     break;
+                    // }
                     if (finalPathIndex == finalPath.Count - 1)
                     {
                         hasFinished = true;
+                        GameLogicManager logic = FindObjectOfType<GameLogicManager>();
+                        logic?.CheckWinCondition();
+
+                        // Dacă jocul nu s-a terminat, oferă tură bonus
+                        if (logic != null && !logic.gameEnded)
+                        {
+                            TurnManager tm = FindObjectOfType<TurnManager>();
+                            tm?.RepeatTurn();
+                        }
+
                         break;
                     }
+
+
                 }
                 else
                 {
@@ -293,7 +317,7 @@ public class PawnMovement : MonoBehaviour
         StartCoroutine(UpdateSpritesNextFrame());
         IsMoving = false;
 
-        //TODO CheckAndEatOpponent(); // ← verificăm doar după ce am terminat mutarea completă
+        CheckAndEatOpponent(); // ← verificăm doar după ce am terminat mutarea completă
     }
 
 

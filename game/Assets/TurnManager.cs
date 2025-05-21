@@ -47,23 +47,42 @@ public class TurnManager : MonoBehaviour
     }
 
 
+    // public void NextTurn()
+    // {
+    //     if (players.Count == 0 || globalDice == null) return;
+    //     UnityEngine.Debug.Log(players.Count);
+    //     currentTurnIndex = (currentTurnIndex + 1) % players.Count;
+    //     var nextPlayer = players[currentTurnIndex];
+
+    //     globalDice.SetActive(true);
+    //     UpdateTurnLabel(nextPlayer.DisplayName);
+
+    //     if (globalDice != null)
+    //     {
+    //         globalDice.ResetSixCounter();
+    //         globalDice.SetActive(true);
+    //     }
+
+
+    // }
+
     public void NextTurn()
     {
+        GameLogicManager logic = FindObjectOfType<GameLogicManager>();
+        if (logic != null && logic.gameEnded)
+        {
+            Debug.Log("🎯 Jocul s-a încheiat. Nu mai schimbăm tura.");
+            return;
+        }
+
         if (players.Count == 0 || globalDice == null) return;
-        UnityEngine.Debug.Log(players.Count);
+
         currentTurnIndex = (currentTurnIndex + 1) % players.Count;
         var nextPlayer = players[currentTurnIndex];
 
         globalDice.SetActive(true);
         UpdateTurnLabel(nextPlayer.DisplayName);
-
-        if (globalDice != null)
-        {
-            globalDice.ResetSixCounter();
-            globalDice.SetActive(true);
-        }
-
-
+        globalDice.ResetSixCounter();
     }
 
     void UpdateTurnLabel(string displayName)
@@ -74,5 +93,17 @@ public class TurnManager : MonoBehaviour
             turnLabel.text = $"It's <b>{label}</b>'s turn!";
         }
     }
+
+    public void RepeatTurn()
+    {
+        UnityEngine.Debug.Log("Jucătorul mai primește o tură bonus!");
+
+        globalDice.SetActive(true);
+        globalDice.ResetSixCounter();
+
+        var currentPlayer = players[currentTurnIndex];
+        UpdateTurnLabel(currentPlayer.DisplayName);
+    }
+
 
 }

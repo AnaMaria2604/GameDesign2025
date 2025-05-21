@@ -179,6 +179,13 @@ public class Dice : MonoBehaviour
     //JOS E CODUL PT A ARUNCA 6 DE MAXIM DE 3 ORI PE TURA
     private IEnumerator RollTheDice()
     {
+        GameLogicManager logic = FindObjectOfType<GameLogicManager>();
+        if (logic != null && logic.gameEnded)
+        {
+            UnityEngine.Debug.Log("🎲 Jocul s-a terminat. Zarul nu se mai aruncă.");
+            yield break;
+        }
+
         int randomDiceSide = 0;
 
         for (int i = 0; i < 20; i++)

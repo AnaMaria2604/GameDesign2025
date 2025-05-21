@@ -34,6 +34,13 @@ public class GameLogicManager : MonoBehaviour
 
     private List<LocalPlayer> players = new List<LocalPlayer>();
 
+    [SerializeField] private GameObject winPopup;
+    [SerializeField] private TMP_Text winPopupText;
+
+    public bool gameEnded = false; // jocul s-a încheiat
+
+
+
     void Start()
     {
         SetupLocalPlayers();
@@ -53,6 +60,80 @@ public class GameLogicManager : MonoBehaviour
     //         pawns[i].transform.localScale = Vector3.one * 0.6f; // Micșorare
     //     }
     // }
+    public void CheckWinCondition()
+    {
+        var pawns = FindObjectsOfType<PawnMovement>();
+        var groupedByPlayer = pawns.GroupBy(p => p.Owner);
+
+        foreach (var group in groupedByPlayer)
+        {
+
+            if (group.Count(p => p.hasFinished) == 4)
+            {
+                ShowWinPopup(group.Key.DisplayName);
+                break;
+            }
+        }
+    }
+
+    // private void ShowWinPopup(string playerName)
+    // {
+    //     winPopup.SetActive(true);
+    //     winPopupText.text = $"{playerName} a câștigat jocul!";
+
+    //     gameEnded = true;
+
+    //     // Dezactivează zarul
+    //     Dice dice = FindObjectOfType<Dice>();
+    //     if (dice != null)
+    //     {
+    //         dice.SetActive(false);
+    //     }
+
+    //     // Dezactivează și tura
+    //     TurnManager tm = FindObjectOfType<TurnManager>();
+    //     if (tm != null)
+    //     {
+    //         tm.enabled = false;
+    //     }
+    // }
+
+    private void ShowWinPopup(string playerName)
+    {
+        winPopup.SetActive(true);
+
+        gameEnded = true;
+
+        // Verificăm dacă e monstru sau jucător normal
+        LocalPlayer winner = GameSettings.LocalPlayers.FirstOrDefault(p => p.DisplayName == playerName);
+
+        if (winner != null && winner.CharacterIndex < 0)
+        {
+            winPopupText.text = "Monstrul a castigat!";
+        }
+        else
+        {
+            winPopupText.text = "Echipa Misterelor a castigat!";
+        }
+
+        // Dezactivează zarul
+        Dice dice = FindObjectOfType<Dice>();
+        if (dice != null)
+        {
+            dice.SetActive(false);
+        }
+
+        // Dezactivează tura
+        TurnManager tm = FindObjectOfType<TurnManager>();
+        if (tm != null)
+        {
+            tm.enabled = false;
+        }
+
+        Debug.Log($"{playerName} a câștigat jocul!");
+    }
+
+
     private void ArrangePawnsInGrid(Vector3 center, List<PawnMovement> pawns)
     {
         int count = pawns.Count;
