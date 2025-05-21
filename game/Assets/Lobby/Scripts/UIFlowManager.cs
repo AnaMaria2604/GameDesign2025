@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
+using System.Text.RegularExpressions; // adaugă sus
 
 public class UIFlowManager : MonoBehaviour
 {
@@ -75,7 +76,7 @@ public class UIFlowManager : MonoBehaviour
 
             // Activează sau dezactivează inputul
             nameInputs[i].interactable = isActive;
-            nameInputs[i].characterLimit = 6; // ← limita de caractere aplicată tuturor
+            nameInputs[i].characterLimit = 10; // ← limita de caractere aplicată tuturor
 
             if (!isActive)
             {
@@ -114,16 +115,14 @@ public class UIFlowManager : MonoBehaviour
 
 
 
-
     public void ConfirmNamesAndStart()
     {
         GameSettings.PlayerNames.Clear();
         for (int i = 0; i < GameSettings.NumberOfPlayers; i++)
         {
-            string name = nameInputs[i].text;
-            // GameSettings.PlayerNames.Add(string.IsNullOrWhiteSpace(name) ? $"Player {i + 1}" : name);
-            GameSettings.PlayerNames.Add(name); // Fără fallback, poate fi ""
-
+            string rawName = nameInputs[i].text;
+            string cleanedName = rawName.Replace(" ", "").Replace("\t", "").Trim(); // elimină toate spațiile
+            GameSettings.PlayerNames.Add(cleanedName);
         }
 
         SceneManager.LoadScene("Scene_Map_01");
