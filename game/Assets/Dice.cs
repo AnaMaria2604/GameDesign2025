@@ -16,10 +16,12 @@ public class Dice : MonoBehaviour
     private int consecutiveSixes = 0;
 
     [SerializeField] private AudioSource rollSound;
+    private Animator animator;
 
 
     private void Start()
     {
+        animator = GetComponent<Animator>();
         image = GetComponent<Image>();
         rollButton = GetComponent<Button>();
         diceSides = Resources.LoadAll<Sprite>("DiceSides/");
@@ -128,6 +130,7 @@ public class Dice : MonoBehaviour
                 turnManager.NextTurn();
                 yield break;
             }
+            animator?.SetTrigger("OnDice6");
 
             var playerPawns = pawns
                 .Where(p => p.Owner != null && p.Owner.CharacterIndex == currentPlayer.CharacterIndex)
