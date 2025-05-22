@@ -15,6 +15,9 @@ public class Dice : MonoBehaviour
     public int lastResult;
     private int consecutiveSixes = 0;
 
+    [SerializeField] private AudioSource rollSound;
+
+
     private void Start()
     {
         image = GetComponent<Image>();
@@ -86,6 +89,9 @@ public class Dice : MonoBehaviour
             yield break;
         }
 
+        if (rollSound != null)
+            rollSound.Play();
+
         int randomDiceSide = 0;
 
         for (int i = 0; i < 20; i++)
@@ -94,6 +100,9 @@ public class Dice : MonoBehaviour
             UpdateDiceSprite(randomDiceSide);
             yield return new WaitForSeconds(0.05f);
         }
+
+        if (rollSound != null)
+            rollSound.Stop();
 
         lastResult = randomDiceSide + 1;
 

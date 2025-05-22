@@ -41,6 +41,9 @@ public class GameLogicManager : MonoBehaviour
 
     public HashSet<Vector3> temporarySafePositions = new HashSet<Vector3>();
 
+    [SerializeField] private AudioSource winSound;
+
+
 
 
 
@@ -50,7 +53,7 @@ public class GameLogicManager : MonoBehaviour
         StartCoroutine(ShowGameBoardAfterDelay());
     }
 
-   
+
     public void CheckWinCondition()
     {
         var pawns = FindObjectsOfType<PawnMovement>();
@@ -71,20 +74,22 @@ public class GameLogicManager : MonoBehaviour
     private void ShowWinPopup(string playerName)
     {
         winPopup.SetActive(true);
-
         gameEnded = true;
 
-        // Verificăm dacă e monstru sau jucător normal
         LocalPlayer winner = GameSettings.LocalPlayers.FirstOrDefault(p => p.DisplayName == playerName);
 
         if (winner != null && winner.CharacterIndex < 0)
         {
-            winPopupText.text = "Monstrul a castigat!";
+            winPopupText.text = "Monstrul a câștigat!";
         }
         else
         {
-            winPopupText.text = "Echipa Misterelor a castigat!";
+            winPopupText.text = "Echipa Misterelor a câștigat!";
         }
+
+        // ▶️ Redă sunetul de victorie
+        if (winSound != null)
+            winSound.Play();
 
         // Dezactivează zarul
         Dice dice = FindObjectOfType<Dice>();
@@ -100,8 +105,9 @@ public class GameLogicManager : MonoBehaviour
             tm.enabled = false;
         }
 
-        Debug.Log($"{playerName} a câștigat jocul!");
+        UnityEngine.Debug.Log($"{playerName} a câștigat jocul!");
     }
+
 
 
     private void ArrangePawnsInGrid(Vector3 center, List<PawnMovement> pawns)

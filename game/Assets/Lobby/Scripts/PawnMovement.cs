@@ -23,6 +23,12 @@ public class PawnMovement : MonoBehaviour
     [SerializeField]
     public List<Transform> safeZones;
 
+    [SerializeField] private AudioSource eatSound;
+
+    [SerializeField] private AudioSource reachHomeSound;
+
+
+
 
 
     public bool CanMove(int steps)
@@ -116,11 +122,6 @@ public class PawnMovement : MonoBehaviour
 
         var opponents = pawnsOnSameSpot.FindAll(p => p.Owner.CharacterIndex != this.Owner.CharacterIndex);
 
-        // if (opponents.Count == 1 && pawnsOnSameSpot.Count == 1)
-        // {
-        //     var eaten = opponents[0];
-        //     eaten.SendToHome();
-        // }
         if (opponents.Count == 1 && pawnsOnSameSpot.Count == 1)
         {
             var eaten = opponents[0];
@@ -130,6 +131,8 @@ public class PawnMovement : MonoBehaviour
             UnityEngine.Debug.Log($"🍽️ Jucătorul {attackerName} l-a mâncat pe {victimName}");
             GameLogger.Instance?.Log($"Jucătorul {attackerName} l-a mâncat pe {victimName}");
 
+            if (eatSound != null)
+                eatSound.Play();
             eaten.SendToHome();
         }
 
@@ -168,8 +171,12 @@ public class PawnMovement : MonoBehaviour
                         GameLogicManager logic = FindObjectOfType<GameLogicManager>();
                         logic?.CheckWinCondition();
 
-                        // Dacă jocul nu s-a terminat, oferă tură bonus
+                        // ▶️ Redă sunetul de ajuns în casă
+                        if (reachHomeSound != null)
+                            reachHomeSound.Play();
+
                         GameLogger.Instance?.Log($"Jucătorul {Owner.DisplayName} a intrat în casă!");
+
                         if (logic != null && !logic.gameEnded)
                         {
                             TurnManager tm = FindObjectOfType<TurnManager>();
@@ -178,6 +185,7 @@ public class PawnMovement : MonoBehaviour
 
                         break;
                     }
+
 
 
                 }
