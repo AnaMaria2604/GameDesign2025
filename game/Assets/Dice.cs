@@ -49,6 +49,8 @@ public class Dice : MonoBehaviour
         }
 
         UnityEngine.Debug.Log($"🔄 It's {currentPlayer.DisplayName}'s turn (CharacterIndex: {currentPlayer.CharacterIndex})");
+        GameLogger.Instance?.Log($"It's {currentPlayer.DisplayName}'s turn (CharacterIndex: {currentPlayer.CharacterIndex})");
+
 
         var pawns = FindObjectsOfType<PawnMovement>();
 
@@ -65,6 +67,7 @@ public class Dice : MonoBehaviour
                 pawn.Owner.CharacterIndex == currentPlayer.CharacterIndex)
             {
                 UnityEngine.Debug.Log($"✅ Moving pawn out for player {currentPlayer.DisplayName} with index {pawn.Owner.CharacterIndex}");
+                GameLogger.Instance?.Log($"Moving pawn out for player {currentPlayer.DisplayName}");
                 pawn.MoveToStart();
                 return;
             }
@@ -110,6 +113,8 @@ public class Dice : MonoBehaviour
             if (consecutiveSixes >= 4)
             {
                 UnityEngine.Debug.Log(" Ai dat 6 de 3 ori în aceeași tură. Pierzi rândul.");
+                GameLogger.Instance?.Log("Ai dat 6 de 3 ori în aceeași tură. Pierzi rândul.");
+
                 consecutiveSixes = 0;
                 turnManager.NextTurn();
                 yield break;
@@ -125,6 +130,8 @@ public class Dice : MonoBehaviour
             if (inHome.Count == 0 && onBoard.Count == 0)
             {
                 UnityEngine.Debug.Log("ℹ Niciun pion disponibil pentru mutare.");
+                GameLogger.Instance?.Log("Niciun pion disponibil pentru mutare.");
+
                 turnManager.NextTurn();
                 yield break;
             }

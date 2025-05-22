@@ -64,6 +64,7 @@ public class TurnManager : MonoBehaviour
         globalDice.SetActive(true);
         UpdateTurnLabel(nextPlayer.DisplayName);
         globalDice.ResetSixCounter();
+
     }
 
     void UpdateTurnLabel(string displayName)
@@ -79,10 +80,13 @@ public class TurnManager : MonoBehaviour
     {
         UnityEngine.Debug.Log("Jucătorul mai primește o tură bonus!");
 
+
         globalDice.SetActive(true);
         globalDice.ResetSixCounter();
 
         var currentPlayer = players[currentTurnIndex];
+        GameLogger.Instance?.Log($"Jucătorul {currentPlayer.DisplayName} mai primește o tură bonus!");
+
         UpdateTurnLabel(currentPlayer.DisplayName);
     }
 

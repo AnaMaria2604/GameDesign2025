@@ -116,11 +116,23 @@ public class PawnMovement : MonoBehaviour
 
         var opponents = pawnsOnSameSpot.FindAll(p => p.Owner.CharacterIndex != this.Owner.CharacterIndex);
 
+        // if (opponents.Count == 1 && pawnsOnSameSpot.Count == 1)
+        // {
+        //     var eaten = opponents[0];
+        //     eaten.SendToHome();
+        // }
         if (opponents.Count == 1 && pawnsOnSameSpot.Count == 1)
         {
             var eaten = opponents[0];
+            string attackerName = this.Owner?.DisplayName ?? "Necunoscut";
+            string victimName = eaten.Owner?.DisplayName ?? "Necunoscut";
+
+            UnityEngine.Debug.Log($"🍽️ Jucătorul {attackerName} l-a mâncat pe {victimName}");
+            GameLogger.Instance?.Log($"Jucătorul {attackerName} l-a mâncat pe {victimName}");
+
             eaten.SendToHome();
         }
+
     }
 
     public void MoveForward(int steps)
@@ -149,7 +161,7 @@ public class PawnMovement : MonoBehaviour
                     Transform next = finalPath[finalPathIndex];
                     yield return StartCoroutine(MoveToPosition(next.position));
 
-                   
+
                     if (finalPathIndex == finalPath.Count - 1)
                     {
                         hasFinished = true;
@@ -157,6 +169,7 @@ public class PawnMovement : MonoBehaviour
                         logic?.CheckWinCondition();
 
                         // Dacă jocul nu s-a terminat, oferă tură bonus
+                        GameLogger.Instance?.Log($"Jucătorul {Owner.DisplayName} a intrat în casă!");
                         if (logic != null && !logic.gameEnded)
                         {
                             TurnManager tm = FindObjectOfType<TurnManager>();
